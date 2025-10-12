@@ -2,12 +2,17 @@ import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.j
 import StartScene from './scenes/StartScene.js';
 import GameScene from './scenes/GameScene.js';
 
-
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  scene: [StartScene, GameScene]
+  scale: {
+    mode: Phaser.Scale.RESIZE,      // Canvas resizes to fit parent element (usually window)
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    parent: 'game-container',      // Optional: your wrapper div id
+    width: 800,                    // Logical width, UI coordinates use this
+    height: 1100                   // Logical height
+  },
+  backgroundColor: '#ffffff',
+  scene: [GameScene]
 };
 
 const game = new Phaser.Game(config);

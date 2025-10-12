@@ -52,12 +52,25 @@ export default class GameScene extends Phaser.Scene {
     this.add.text(centerX - 40, 950, '연출 건너뛰기', { fontSize: '18px', color: '#222' }).setOrigin(0, 0.5);
 
     // Bottom nav (triangles, circles/text)
-    this.add.triangle(centerX - 200, 1010, -15, 0, 15, 15, 15, -15, 0x222222);
-    this.add.triangle(centerX + 200, 1010, 15, 0, -15, 15, -15, -15, 0x222222);
-
     ['장식장', '가방', '상점'].forEach((label, i) => {
-      this.add.circle(centerX - 80 + (i * 80), 1010, 32, 0xf1f1f1);
-      this.add.text(centerX - 80 + (i * 80), 1010, label, { fontSize: '18px', color: '#222' }).setOrigin(0.5);
+    // Create circle button
+    let circleBtn = this.add.circle(centerX - 80 + (i * 80), 1010, 32, 0xf1f1f1)
+        .setInteractive({ useHandCursor: true });  // Make circle interactive with cursor change on hover
+
+    // Create text button
+    let textBtn = this.add.text(centerX - 80 + (i * 80), 1010, label, { fontSize: '18px', color: '#222' }).setOrigin(0.5)
+        .setInteractive({ useHandCursor: true });  // Make text interactive
+
+    // Add input event listeners for both circle and text
+    circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
+    textBtn.on('pointerdown', () => this.onNavButtonClicked(label));
     });
+
   }
+    
+    onNavButtonClicked(label) {
+    console.log(label + ' clicked!');
+    // TODO: Add logic here to switch UI content or change pages based on label
+    // e.g., showing different containers or scenes
+    }
 }

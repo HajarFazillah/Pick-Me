@@ -11,8 +11,7 @@ const config = {
     width: 800,                    // Logical width, UI coordinates use this
     height: 1100                   // Logical height
   },
-  backgroundColor: '#ffffff',
-  scene: [GameScene]
+  scene: [StartScene, GameScene]
 };
 
 const game = new Phaser.Game(config);

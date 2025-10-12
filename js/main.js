@@ -1,26 +1,13 @@
+import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
+import StartScene from './scenes/StartScene.js';
+import GameScene from './scenes/GameScene.js';
+
+
 const config = {
   type: Phaser.AUTO,
   width: 800,
   height: 600,
-  scene: {
-    preload: preload,
-    create: create,
-    update: update
-  }
+  scene: [StartScene, GameScene]
 };
 
 const game = new Phaser.Game(config);
-
-function preload() {
-  // Example: load a placeholder image (add one to your assets folder first)
-  this.load.image('any', 'assets/any.png');
-}
-
-function create() {
-  // Example: display the placeholder image in the center
-  this.add.image(400, 300, 'any');
-}
-
-function update() {
-  // Game loop logic goes here (leave empty for now)
-}

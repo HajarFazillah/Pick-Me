@@ -7,6 +7,12 @@ export default class GameScene extends Phaser.Scene {
     this.popup = null;
   }
 
+  preload() {
+  this.load.image('LeftLever', 'assets/LeftLever.png');
+  this.load.image('CapsuleOpen', 'assets/CapsuleOpen.png');
+  this.load.image('GachaResult', 'assets/GachaResult.png');
+}
+
   create() {
     const centerX = this.cameras.main.centerX;
     this.cameras.main.setBackgroundColor('#ffffff');
@@ -72,7 +78,7 @@ export default class GameScene extends Phaser.Scene {
 
   }
 
-  handleLeftLeverClick() {
+   handleLeftLeverClick() {
     if (this.popup) return; // Prevent interaction while popup is open
 
     if (this.leverState === 0) {
@@ -86,7 +92,7 @@ export default class GameScene extends Phaser.Scene {
       this.leverState = 3;
     }
   }
-
+  
   showPopup(imageName, labelText) {
     // Remove any previous popup
     if (this.popup) {
@@ -102,16 +108,16 @@ export default class GameScene extends Phaser.Scene {
     const bg = this.add.rectangle(0, 0, 320, 320, 0xffcce2).setStrokeStyle(2, 0x000000);
     this.popup.add(bg);
 
-    // Placeholder for image
-    const imgPlaceholder = this.add.rectangle(0, -40, 160, 160, 0xffffff)
-      .setStrokeStyle(1, 0x000000);
-    this.popup.add(imgPlaceholder);
-    const imgText = this.add.text(0, -40, imageName, { fontSize: '22px', color: '#333' }).setOrigin(0.5);
-    this.popup.add(imgText);
+    // Select correct image key
+  let key = imageName;
+  if (key === "Lever Turn") key = "LeftLever";
+  else if (key === "Capsule Open") key = "CapsuleOpen";
+  else if (key === "Gacha Result") key = "GachaResult";
 
-     // Label (e.g., reward name)
-    const rewardText = this.add.text(0, 70, labelText, { fontSize: '20px', color: '#333' }).setOrigin(0.5);
-    this.popup.add(rewardText);
+  // Add the image
+  const img = this.add.image(0, 0, key);
+  img.setDisplaySize(160, 160); // Scale as you like
+  this.popup.add(img);
 
     // "확인" button only for result state
     if (imageName === "Gacha Result") {

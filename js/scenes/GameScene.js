@@ -3,9 +3,12 @@ import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.j
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('GameScene');
-    this.leverState = 0; // 0: idle, 1: lever turned, 2: capsule opened, 3: result shown
-    this.popup = null;
-    this.gachaResults = []; // Stores result images for 10x gacha
+    this.leverState = 0; // Left lever: Tracks what stage of animation we're in (0, 1, 2, 3)
+    this.popup = null;  // Stores the currently displayed popup container
+    // Right Lever: Arrays to store the 10 random results for multi-pull
+    this.gachaResults = []; // Character names
+    this.gachaCapsules = []; 
+    this.currentCapsuleIndex = 0; //Which capsule currently being showed
   }
 
   preload() {
@@ -13,13 +16,15 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('LeftLever', 'assets/LeftLever.png');
     this.load.image('RightLever', 'assets/RightLever.png');
     this.load.image('CapsuleDrop', 'assets/CapsuleDrop.png');
+    this.load.image('CapsuleOpen', 'assets/CapsuleOpen.png');
     this.load.image('CapsuleOpen_Yellow', 'assets/CapsuleOpen_Yellow.png');  // Different types/colors
     this.load.image('CapsuleOpen_Blue', 'assets/CapsuleOpen_Blue.png');
     this.load.image('GachaResult', 'assets/GachaResult.png');
-    this.load.image('Char_Apple', 'assets/Char_Cake.png');
-    this.load.image('Char_Heart', 'assets/Char_Snow.png');
-    this.load.image('Char_Drop', 'assets/Char_Pen.png');
-    this.load.image('Char_Leaf', 'assets/Char_Happy.png');
+    // Character result images - add more as needed
+    this.load.image('Char_Cake', 'assets/Char_Cake.png');
+    this.load.image('Char_Snow', 'assets/Char_Snow.png');
+    this.load.image('Char_Pen', 'assets/Char_Pen.png');
+    this.load.image('Char_Happy', 'assets/Char_Happy.png');
     // Other images can be add here too
   }
 
@@ -73,14 +78,13 @@ export default class GameScene extends Phaser.Scene {
     this.add.line(centerX - 200, 200, 400, 400, 0x000000);
     this.add.line(centerX + 200, 200, -400, 400, 0x000000);
 
-    // Gacha levers (left/right)
-    // Left lever (single pull)
+    // ================================== Left Lever (1회 뽑기 / Single Pull) ================================
      const leftLever = this.add.circle(centerX - 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
     this.add.rectangle(centerX - 120, 680, 28, 130, 0x1a1a1a);
     this.add.text(centerX - 120, 760, '1회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
     leftLever.on('pointerdown', () => this.handleLeftLeverClick());
 
-    // Right lever (10 pull)
+    // ================================== Right Lever (10회 뽑기 / 10X Pull) ==================================
     const rightLever = this.add.circle(centerX + 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
     this.add.rectangle(centerX + 120, 680, 28, 130, 0x1a1a1a);
     this.add.text(centerX + 120, 760, '10회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
@@ -109,9 +113,9 @@ export default class GameScene extends Phaser.Scene {
     circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
     textBtn.on('pointerdown', () => this.onNavButtonClicked(label));
     });
-
+    
   }
-
+  // Left Lever Logic - Single Pull
    handleLeftLeverClick() {
     if (this.popup) return; // Prevent interaction while popup is open
 
@@ -127,101 +131,9 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-    handleRightLeverClick() {
-    if (this.popup) return;
-    this.dropMultipleCapsules(10);
-  }
-
-  dropMultipleCapsules(count) {
-    this.gachaResults = [];
-    let dropIndex = 0;
-
-    const dropNextCapsule = () => {
-      if (dropIndex >= count) {
-        // All capsules done, show results popup
-        this.showMultiResultPopup();
-        return;
-      }
-
-      // 1. Animate capsule drop
-      const centerX = this.cameras.main.centerX;
-      const startY = 100;          // Start above
-      const endY = 400;            // End in center (gacha box)
-      // Pick capsule color randomly
-      const capsuleColors = ['CapsuleOpen_Yellow', 'CapsuleOpen_Blue', 'CapsuleOpen_Red'];
-      const capsuleKey = capsuleColors[Math.floor(Math.random() * capsuleColors.length)];
-      // Pick character randomly
-      const characters = ['Char_Apple', 'Char_Heart', 'Char_Drop', 'Char_Leaf']; // Add all character keys here later
-      const characterKey = characters[Math.floor(Math.random() * characters.length)];
-
-      const capsule = this.add.image(centerX, startY, 'CapsuleDrop').setScale(0.5);
-
-      // Capsule drop animation
-      this.tweens.add({
-        targets: capsule,
-        y: endY,
-        duration: 500,
-        onComplete: () => {
-          capsule.setVisible(false);
-          // Show capsule open color & character result
-          const capsuleOpen = this.add.image(centerX, endY, capsuleKey).setScale(0.7);
-          const charImg = this.add.image(centerX, endY, characterKey).setScale(1.1);
-
-          this.time.delayedCall(700, () => {
-            capsuleOpen.destroy();
-            charImg.destroy();
-            this.gachaResults.push(characterKey);
-            dropIndex++;
-            dropNextCapsule();
-          });
-        }
-      });
-    };
-
-    dropNextCapsule();
-  }
-
-  showMultiResultPopup() {
-    // Remove any previous popup
-    if (this.popup) {
-      this.popup.destroy();
-      this.popup = null;
-    }
-    const centerX = this.cameras.main.centerX;
-    const centerY = 400;
-
-    this.popup = this.add.container(centerX, centerY);
-
-    // Pink background
-    const bg = this.add.rectangle(0, 0, 340, 370, 0xffcce2).setStrokeStyle(2, 0x000000);
-    this.popup.add(bg);
-
-    // Result grid of characters
-    const resultsPerRow = 5;
-    for(let i=0; i < this.gachaResults.length; i++) {
-      const x = -120 + (i % resultsPerRow) * 60;
-      const y = -80 + Math.floor(i / resultsPerRow) * 110;
-      const char = this.add.image(x, y, this.gachaResults[i]).setScale(0.7);
-      this.popup.add(char);
-      // Optionally add name label:
-      // const txt = this.add.text(x, y+45, '이름이름', {fontSize:'14px',color:'#222'}).setOrigin(0.5);
-      // this.popup.add(txt);
-    }
-
-    // 확인 button
-    const confirmBtn = this.add.rectangle(0, 155, 120, 44, 0xdddddd).setInteractive({ useHandCursor: true });
-    const confirmBtnText = this.add.text(0, 156, '확인', { fontSize: '20px', color: '#111' }).setOrigin(0.5);
-    this.popup.add(confirmBtn);
-    this.popup.add(confirmBtnText);
-
-    confirmBtn.on('pointerdown', () => {
-      this.popup.destroy();
-      this.popup = null;
-    });
-  }
-
-  showPopup(imageName, labelText) {
-    // Remove any previous popup
+  // Left Lever Popup Display
+    showPopup(imageName, labelText) {   //left lever
+    // Clean previous popup
     if (this.popup) {
       this.popup.destroy();
       this.popup = null;
@@ -231,22 +143,24 @@ export default class GameScene extends Phaser.Scene {
     const centerY = 400; 
     this.popup = this.add.container(centerX, centerY);
 
-    // Popup background
-    const bg = this.add.rectangle(0, 0, 320, 320, 0xffcce2).setStrokeStyle(2, 0x000000);
+    if (imageName === "Gacha Result") {
+    const bg = this.add.rectangle(0, 0, 320, 320, 0xffcce2)
+      .setStrokeStyle(2, 0x000000);
     this.popup.add(bg);
+  }
 
-    // Select correct image key
+    // Map the state name to the correct image asset
   let key = imageName;
   if (key === "Lever Turn") key = "LeftLever";
   else if (key === "Capsule Open") key = "CapsuleOpen";
   else if (key === "Gacha Result") key = "GachaResult";
 
-  // Add the image
+  // Add the image to the popup
   const img = this.add.image(0, 0, key);
   img.setDisplaySize(160, 160); 
   this.popup.add(img);
 
-    // "확인" button only for result state
+    // FINAL STATE: Show "확인" button to close and reset
     if (imageName === "Gacha Result") {
       const confirmBtn = this.add.rectangle(0, 120, 120, 40, 0xdddddd)
         .setInteractive({ useHandCursor: true });
@@ -261,14 +175,164 @@ export default class GameScene extends Phaser.Scene {
       });
     } else {
       // For intermediate states, click anywhere in popup to advance
-      bg.setInteractive({ useHandCursor: true });
-      bg.on('pointerdown', () => {
+      img.setInteractive({ useHandCursor: true });
+      img.on('pointerdown', () => {
         this.popup.destroy();
         this.popup = null;
         this.handleLeftLeverClick(); // Advance to next state
       });
     }
   }
+   
+  //Right Lever Logic (10 Pull)
+ handleRightLeverClick() {
+    if (this.popup) return;
+    // Define available characters and capsule colors
+    const characters = ['Char_Cake', 'Char_Snow', 'Char_Pen', 'Char_Happy'];
+    const capsuleColors = ['CapsuleOpen_Yellow', 'CapsuleOpen_Blue'];
+    //Reset arrays
+    this.gachaResults = [];
+    this.gachaCapsules = [];
+    //Generate 10 random results
+    for (let i = 0; i < 10; i++) {
+      // Pick a random character
+      this.gachaResults.push(
+        characters[Math.floor(Math.random() * characters.length)]
+      );
+      // Pick a random capsule color
+      this.gachaCapsules.push(
+        capsuleColors[Math.floor(Math.random() * capsuleColors.length)]
+      );
+    }
+    //Start from the first capsule
+    this.currentCapsuleIndex = 0;
+    this.revealCapsulesOneByOne();
+  }
+// Reveal capsule one by one
+revealCapsulesOneByOne() {
+  // Clean up previous popup
+    if (this.popup) {
+      this.popup.destroy();
+      this.popup = null;
+    }
+    const centerX = this.cameras.main.centerX;
+    const centerY = 400;
+    this.popup = this.add.container(centerX, centerY);
+
+    // Get current capsule data
+    const idx = this.currentCapsuleIndex;
+    const capsuleKey = this.gachaCapsules[idx]; //CapsuleOpen_Yellow
+    const charKey = this.gachaResults[idx]; // 'Char_cake'
+
+    // Create capsule image starting above the visible area
+     const capsuleImg = this.add.image(0, -200, capsuleKey);
+     capsuleImg.setDisplaySize(180, 180);  
+     this.popup.add(capsuleImg);
+    
+    // Animate capsule dropping to center
+    this.tweens.add({
+      targets: capsuleImg,
+      y: 0,            // Move to center
+      duration: 500,   // 0.5 seconds
+      onComplete: () => {
+        // After drop animation completes, make capsule clickable
+        capsuleImg.setInteractive({useHandCursor: true});
+
+        // When user clicks capsule
+        capsuleImg.once('pointerdown', () => {
+          capsuleImg.setVisible(false); //Hide capsule
+
+          // Show character result
+          const charImg = this.add.image(0, 0, charKey).setScale(1);
+          this.popup.add(charImg);
+          charImg.setInteractive({useHandCursor: true});
+
+          // When user clicks character 
+          charImg.once('pointerdown', () => {
+            this.popup.destroy();
+            this.popup = null;
+            this.currentCapsuleIndex++; // Move to next capsule
+
+            if (this.currentCapsuleIndex < 10) {
+              // Still have more capsules to reveal
+              this.revealCapsulesOneByOne();
+            } else {
+              // All 10 capsules revealed -> show final grid
+              this.showMultiResultPopup();
+            }
+          });
+        });
+      }
+    });
+  }
+
+  // Show multi-result popup
+  showMultiResultPopup() {
+    // Clean up previous pupop
+    if (this.popup) {
+      this.popup.destroy();
+      this.popup = null;
+    }
+    const centerX = this.cameras.main.centerX;
+    const centerY = 400;
+
+    this.popup = this.add.container(centerX, centerY);
+
+    // Create pink background
+    const bg = this.add.rectangle(0, 0, 340, 370, 0xffcce2)
+      .setStrokeStyle(2, 0x000000);
+    this.popup.add(bg);
+
+    // Display characters in a grid (4-4-2 layout)
+   const rowSizes = [4, 4, 2]; // Items per row
+let itemIndex = 0;
+
+for (let row = 0; row < rowSizes.length; row++) {
+  const itemsInRow = rowSizes[row];
+  const rowWidth = (itemsInRow - 1) * 60; // Total width of items in this row
+  const startX = -rowWidth / 2; // Center the row horizontally
+  
+  for (let col = 0; col < itemsInRow; col++) {
+    if (itemIndex >= this.gachaResults.length) break; // Safety check
+    
+    const x = startX + col * 60;           // Horizontal position (centered per row)
+    const y = -80 + row * 90;             // Vertical position (row spacing)
+    const char = this.add.image(x, y, this.gachaResults[itemIndex]).setScale(0.5);
+    this.popup.add(char);
+    
+    itemIndex++;
+  }
+}
+
+    //  Add "확인" button to close the popup
+    const confirmBtn = this.add.rectangle(0, 155, 120, 44, 0xdddddd)
+    .setInteractive({ useHandCursor: true })
+    .setStrokeStyle(2, 0x000000);  // Border for visibility
+
+  const confirmBtnText = this.add.text(0, 155, '확인', { 
+    fontSize: '20px', 
+    color: '#111' 
+  }).setOrigin(0.5);
+
+  this.popup.add(confirmBtn);
+  this.popup.add(confirmBtnText);
+
+  // Hover feedback
+  confirmBtn.on('pointerover', () => {
+    confirmBtn.setFillStyle(0xbbbbbb);
+  });
+
+  confirmBtn.on('pointerout', () => {
+    confirmBtn.setFillStyle(0xdddddd);
+  });
+
+  // Click handler
+  confirmBtn.on('pointerdown', () => {
+    console.log('Button clicked!');  // Check console
+    this.popup.destroy();
+    this.popup = null;
+  });
+}
     
     onNavButtonClicked(label) {
     console.log(label + ' clicked!');

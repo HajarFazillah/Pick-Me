@@ -27,30 +27,67 @@ export default class GameScene extends Phaser.Scene {
     const centerX = this.cameras.main.centerX;
     this.cameras.main.setBackgroundColor('#ffffff');
 
-    // Top currency bars
-    this.add.rectangle(165, 50, 315, 40).setStrokeStyle(2, 0x000000);
-    this.add.circle(40, 50, 16, 0xffe68a).setStrokeStyle(2, 0x000000);
-    this.add.text(70, 39, '000000000', { fontSize: '21px', color: '#000' });
+        // Top currency bars
+    this.add.rectangle(215, 50, 315, 40).setStrokeStyle(2, 0x000000);
+    this.add.circle(90, 50, 16, 0xffe68a).setStrokeStyle(2, 0x000000);
+    this.add.text(120, 39, '000000000', { fontSize: '21px', color: '#000' });
 
-    this.add.rectangle(590, 50, 315, 40).setStrokeStyle(2, 0x000000);
-    this.add.circle(470, 50, 16, 0x66ccff).setStrokeStyle(2, 0x000000);
-    this.add.text(500, 39, '000000000', { fontSize: '21px', color: '#000' });
+  const barY = 40;
+  const barHeight = 20;
+  const canvasWidth = this.cameras.main.width;
+
+  // Button data
+  const buttonLabels = ['퀘스트', '메일', '설정', '공지'];
+  const buttonCount = buttonLabels.length;
+  const buttonRadius = 25;
+  const buttonGap = 50;
+  const buttonsWidth = buttonCount * buttonRadius * 2 + (buttonCount - 1) * buttonGap;
+  const rightPadding = 60;
+
+  // Calculate leftmost X so the row ends at "rightPadding"
+  let startX = canvasWidth - rightPadding - buttonsWidth + buttonRadius;
+
+  this.topButtons = [];
+  for (let i = 0; i < buttonCount; i++) {
+    const x = startX + i * (buttonRadius * 2 + buttonGap);
+    // Draw circle
+    const circle = this.add.circle(x, barY + buttonRadius, buttonRadius, 0xffffff)
+      .setStrokeStyle(4, 0x8887f6)
+      .setInteractive({ useHandCursor: true });
+
+    // Optional: add outline on hover
+    circle.on('pointerover', () => circle.setFillStyle(0xf4f6ff));
+    circle.on('pointerout', () => circle.setFillStyle(0xffffff));
+
+    // Label
+    const label = this.add.text(x, barY + buttonRadius*2 + 10, buttonLabels[i], {
+      fontSize: '22px', color: '#222', fontFamily: 'Arial'
+    }).setOrigin(0.5, 0);
+
+    // Click event
+    circle.on('pointerdown', () => {
+      console.log(buttonLabels[i] + ' clicked!');
+      // Handle button action here
+    });
+
+    this.topButtons.push({ circle, label });
+  }
 
     // Three gacha category buttons
     const categories = [
-        { x: centerX - 160, label: '이달의 가챠' },
+        { x: centerX - 200, label: '이달의 가챠' },
         { x: centerX, label: '11월 한정' },
-        { x: centerX + 160, label: '커밍순' }
+        { x: centerX + 210, label: '커밍순' }
     ];
 
     this.categoryRects = [];
     this.categoryTexts = [];
 
     categories.forEach((cat, index) => {
-      const rect = this.add.rectangle(cat.x, 130, 160, 48, 0xcccccc)
+      const rect = this.add.rectangle(cat.x, 150, 160, 48, 0xcccccc)
         .setInteractive({ useHandCursor: true });
 
-    const text = this.add.text(cat.x, 130, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+    const text = this.add.text(cat.x, 150, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
 
     this.categoryRects.push(rect);
     this.categoryTexts.push(text);

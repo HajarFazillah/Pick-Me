@@ -5,11 +5,9 @@ import GameScene from './scenes/GameScene.js';
 const config = {
   type: Phaser.AUTO,
   scale: {
-    mode: Phaser.Scale.RESIZE,      // Canvas resizes to fit parent element (usually window)
+    mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    parent: 'game-container',      // Optional: your wrapper div id
-    width: 800,                    // Logical width, UI coordinates use this
-    height: 1100                   // Logical height
+    parent: 'game-container',                 
   },
   scene: [StartScene, GameScene]
 };

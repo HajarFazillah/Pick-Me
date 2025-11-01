@@ -16,7 +16,6 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('CapsuleOpen_Yellow', 'assets/CapsuleOpen_Yellow.png');  // Different types/colors
     this.load.image('CapsuleOpen_Blue', 'assets/CapsuleOpen_Blue.png');
     this.load.image('GachaResult', 'assets/GachaResult.png');
-    // Character result images - add more as needed
     this.load.image('Char_Apple', 'assets/Char_Cake.png');
     this.load.image('Char_Heart', 'assets/Char_Snow.png');
     this.load.image('Char_Drop', 'assets/Char_Pen.png');
@@ -38,15 +37,37 @@ export default class GameScene extends Phaser.Scene {
     this.add.text(500, 39, '000000000', { fontSize: '21px', color: '#000' });
 
     // Three gacha category buttons
-    this.add.rectangle(centerX - 160, 130, 160, 48, 0xcccccc);
-    this.add.text(centerX - 160, 130, '이달의 가챠', { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+    const categories = [
+        { x: centerX - 160, label: '이달의 가챠' },
+        { x: centerX, label: '11월 한정' },
+        { x: centerX + 160, label: '커밍순' }
+    ];
 
-    this.add.rectangle(centerX, 130, 160, 48, 0xcccccc);
-    this.add.text(centerX, 130, '11월 한정', { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+    this.categoryRects = [];
+    this.categoryTexts = [];
 
-    this.add.rectangle(centerX + 160, 130, 160, 48, 0xcccccc);
-    this.add.text(centerX + 160, 130, '커밍순', { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+    categories.forEach((cat, index) => {
+      const rect = this.add.rectangle(cat.x, 130, 160, 48, 0xcccccc)
+        .setInteractive({ useHandCursor: true });
 
+    const text = this.add.text(cat.x, 130, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+
+    this.categoryRects.push(rect);
+    this.categoryTexts.push(text);
+    
+      rect.on('pointerdown', () => {
+        categories.forEach((c, i) => {
+          if (i === index) {
+            this.categoryRects[i].setFillStyle(0x003366); // dark blue
+            this.categoryTexts[i].setColor('#fff');
+          } else {
+            this.categoryRects[i].setFillStyle(0x999999); // grey
+            this.categoryTexts[i].setColor('#444');
+          }
+        });
+      });
+    });
+    
     // Large gacha placeholder box (with X)
     this.add.rectangle(centerX, 400, 400, 400).setStrokeStyle(2, 0x000000);
     this.add.line(centerX - 200, 200, 400, 400, 0x000000);

@@ -48,17 +48,17 @@ export default class GameScene extends Phaser.Scene {
         { x: centerX + 160, label: '커밍순' }
     ];
 
-     this.categoryRects = [];
-     this.categoryTexts = [];
+    this.categoryRects = [];
+    this.categoryTexts = [];
 
-     categories.forEach((cat, index) => {
+    categories.forEach((cat, index) => {
       const rect = this.add.rectangle(cat.x, 130, 160, 48, 0xcccccc)
         .setInteractive({ useHandCursor: true });
-         const text = this.add.text(cat.x, 130, cat.label, { fontSize: '18px', color: '#444'
-     }).setOrigin(0.5);
 
-      this.categoryRects.push(rect);
-      this.categoryTexts.push(text);
+    const text = this.add.text(cat.x, 130, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+
+    this.categoryRects.push(rect);
+    this.categoryTexts.push(text);
     
       rect.on('pointerdown', () => {
         categories.forEach((c, i) => {

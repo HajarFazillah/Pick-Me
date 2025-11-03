@@ -106,7 +106,7 @@ export default class GameScene extends Phaser.Scene {
 
     });
     
-    // Large gacha placeholder box (with X)
+    // Large gacha placeholder box
     this.add.rectangle(centerX, 400, 400, 400).setStrokeStyle(2, 0x000000);
 
     // Left Lever (1회 뽑기)
@@ -130,20 +130,50 @@ export default class GameScene extends Phaser.Scene {
     // Skip animation checkbox
     this.add.rectangle(centerX - 65, 950, 24, 24, 0xffffff).setStrokeStyle(1, 0x222222);
     this.add.text(centerX - 40, 950, '연출 건너뛰기', { fontSize: '18px', color: '#222' }).setOrigin(0, 0.5);
-
-    // Bottom nav (triangles, circles/text)
-    ['장식장', '가방', '상점', '도감'].forEach((label, i) => {
-    let circleBtn = this.add.circle(centerX - 80 + (i * 80), 1010, 32, 0xf1f1f1)
-        .setInteractive({ useHandCursor: true });
-    let textBtn = this.add.text(centerX - 80 + (i * 80), 1010, label, { fontSize: '18px', color: '#222' }).setOrigin(0.5)
-        .setInteractive({ useHandCursor: true });
-
-    // Add input event listeners for both circle and text
-    circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
-    textBtn.on('pointerdown', () => this.onNavButtonClicked(label));
-    });
-    //////////////////////////////////////////////////////////////////
     
+    //////////////////////////////////////////////////////////////////
+    // Bottom Navigation Bar
+    const circleRadius = 55;
+    const circleGap = 30;
+    const labels = ['장식장', '가방', '상점', '도감'];
+    const n = labels.length;
+    
+    const totalWidth = n * (circleRadius * 2) + (n - 1) * circleGap;
+
+    const centerXNav = this.cameras.main.centerX;
+    const navY = 1100; // lower down whole bottom nav bar (pixels)
+    let startXNav = centerXNav - totalWidth / 2 + circleRadius;
+
+    const arrowOffset = 60;
+    const arrowSize = 40;
+
+    const leftArrow = this.add.triangle(
+      startXNav - circleRadius - arrowOffset, navY,
+      arrowSize, 0, 0, arrowSize /2, arrowSize, arrowSize, 0x222222).setInteractive({ useHandCursor: true });
+
+    labels.forEach((label, i) => {
+      const x = startXNav + i * (circleRadius * 2 + circleGap);
+      const circleBtn = this.add.circle(x, navY, circleRadius, 0xf1f1f1).setInteractive({ useHandCursor: true });
+      const textBtn = this.add.text(x, navY, label, {
+      fontSize: '26px', color: '#222', fontFamily: 'Arial', fontStyle: 'bold'
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+
+      circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
+      textBtn.on('pointerdown', () => this.onNavButtonClicked(label));    
+    });
+
+    const rightArrow = this.add.triangle(
+      startXNav + (n - 1) * (circleRadius * 2 + circleGap) + circleRadius + arrowOffset, navY,
+    0, 0, arrowSize, arrowSize / 2, 0, arrowSize, 0x222222).setInteractive({ useHandCursor: true });
+
+    leftArrow.on('pointerdown', () => {
+    // Navigate to previous page group (add your logic here)
+    });
+
+    rightArrow.on('pointerdown', () => {
+    // Navigate to next page group (add your logic here)
+    });
+
   }
 
   handleLeftLeverClick() {

@@ -14,7 +14,7 @@ export default class StartScene extends Phaser.Scene {
       fill: '#ffffff',
     }).setOrigin(0.5);
 
-    const startText = this.add.text(centerX, centerY, 'Touch to Start', {
+    const startText = this.add.text(centerX, centerY, 'Click Here to Start', {
       fontSize: '32px',
       fill: '#00ff00',
       backgroundColor: '#000000',

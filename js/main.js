@@ -9,7 +9,7 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: 'game-container',                 
   },
-  scene: [StartScene, GameScene]
+  scene: [GameScene]
 };
 
 const game = new Phaser.Game(config);

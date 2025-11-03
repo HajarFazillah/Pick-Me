@@ -31,50 +31,47 @@ export default class GameScene extends Phaser.Scene {
     const centerX = this.cameras.main.centerX;
     const centerY = this.cameras.main.centerY;
     this.cameras.main.setBackgroundColor('#ffffff');
-
-    // Coin currency bar at Top Left
-    this.add.rectangle(190, 50, 315, 40).setStrokeStyle(2, 0x000000); // coin bar
-    this.add.circle(90, 50, 16, 0xffe68a).setStrokeStyle(2, 0x000000); // yellow coin
-    this.add.text(120, 40, '000000000', { fontSize: '21px', color: '#000' });
-
-    // 4 Mini Buttons at Top Right (퀘스트, 메일, 설정, 공지)
-    const barY = 40;
-    const barHeight = 20;
-    const canvasWidth = this.cameras.main.width;
-
-    // Button data
-    const buttonLabels = ['퀘스트', '메일', '설정', '공지'];
-    const buttonCount = buttonLabels.length;
-    const buttonRadius = 25;
-    const buttonGap = 50;
-    const buttonsWidth = buttonCount * buttonRadius * 2 + (buttonCount - 1) * buttonGap;
-    const rightPadding = 60;
-
-    // Calculate leftmost X so the row ends at "rightPadding"
-    let startX = canvasWidth - rightPadding - buttonsWidth + buttonRadius;
-
-    this.topButtons = [];
   
-    for (let i = 0; i < buttonCount; i++) {
-      // Calculate button position
-      const x = startX + i * (buttonRadius * 2 + buttonGap);
-      const circle = this.add.circle(x, barY + buttonRadius, buttonRadius, 0xffffff)
-      .setStrokeStyle(4, 0x8887f6)
-      .setInteractive({ useHandCursor: true });
+    const topBarY = 48;
+    const currencyBarWidth = 315, currencyBarHeight = 40;
+    const coinIconRadius = 16;
 
-      const label = this.add.text(x, barY + buttonRadius*2 + 10, buttonLabels[i], {
+    // Currency group
+    const currencyGroup = this.add.container(0, 0);
+    const currencyBar = this.add.rectangle(0, 0, currencyBarWidth, currencyBarHeight, 0xffffff)
+      .setStrokeStyle(2, 0x000000).setOrigin(0, 0.5);
+    const coinIcon = this.add.circle(coinIconRadius + 8, 0, coinIconRadius, 0xffe68a)
+      .setStrokeStyle(2, 0x000000).setOrigin(0.5, 0.5);
+    const coinText = this.add.text(currencyBarWidth - 150, 0, '000000000', { fontSize: '21px', color: '#000' })
+      .setOrigin(0.5, 0.5);
+    currencyGroup.add([currencyBar, coinIcon, coinText]);
+
+    // Button group
+    const buttonLabels = ['퀘스트', '메일', '설정', '공지'];
+    const buttonRadius = 25, buttonGap = 34;
+    const buttonsGroup = this.add.container(currencyBarWidth + 60, 0);
+    buttonLabels.forEach((label, i) => {
+    const x = i * (buttonRadius * 2 + buttonGap);
+    const btn = this.add.circle(x, 0, buttonRadius, 0xffffff)
+        .setStrokeStyle(4, 0x8887f6)
+        .setInteractive({ useHandCursor: true });
+    const txt = this.add.text(x, buttonRadius + 10, label, {
         fontSize: '22px', color: '#222', fontFamily: 'Arial'
-      }).setOrigin(0.5, 0);
+    }).setOrigin(0.5, 0);
 
-    circle.on('pointerover', () => circle.setFillStyle(0xf4f6ff));
-    circle.on('pointerout', () => circle.setFillStyle(0xffffff));
-    circle.on('pointerdown', () => {
-      console.log(buttonLabels[i] + ' clicked!');
-      this.showSimplePopup(buttonLabels[i] + ' 팝업입니다');
+    btn.on('pointerover', () => btn.setFillStyle(0xf4f6ff));
+    btn.on('pointerout', () => btn.setFillStyle(0xffffff));
+    btn.on('pointerdown', () => {
+        this.showSimplePopup(label + ' 팝업입니다');
     });
 
-    this.topButtons.push({ circle, label });
-  }
+    buttonsGroup.add([btn, txt]);
+});
+
+  // Assemble top bar and center
+  const topBarContainer = this.add.container(0, topBarY, [currencyGroup, buttonsGroup]);
+  const totalTopBarWidth = currencyBarWidth + 60 + (buttonLabels.length * buttonRadius * 2) + ((buttonLabels.length - 1) * buttonGap); 
+  topBarContainer.x = this.cameras.main.centerX - totalTopBarWidth / 2;
 
     // CENTER CATEGORY BUTTONS
     const categories = [

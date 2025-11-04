@@ -1,4 +1,5 @@
 import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
+import TopButtonBar from '/ui/TopButtonBar.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -29,167 +30,126 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    
     const centerX = this.cameras.main.centerX;
-    const centerY = this.cameras.main.centerY;
-    this.cameras.main.setBackgroundColor('#ffffff');
-  
-    const topBarY = 48;
-    const currencyBarWidth = 315, currencyBarHeight = 40;
-    const coinIconRadius = 16;
+    const startX = centerX - 240;
+    const startY = 40;
+    this.topButtonBar = new TopButtonBar(this, startX, startY);
 
-    // Currency group
-    const currencyGroup = this.add.container(0, 0);
-    const currencyBar = this.add.rectangle(0, 0, currencyBarWidth, currencyBarHeight, 0xffffff)
-      .setStrokeStyle(2, 0x000000).setOrigin(0, 0.5);
-    const coinIcon = this.add.circle(coinIconRadius + 8, 0, coinIconRadius, 0xffe68a)
-      .setStrokeStyle(2, 0x000000).setOrigin(0.5, 0.5);
-    const coinText = this.add.text(currencyBarWidth - 150, 0, '000000000', { fontSize: '21px', color: '#000' })
-      .setOrigin(0.5, 0.5);
-    currencyGroup.add([currencyBar, coinIcon, coinText]);
+  // CENTER CATEGORY BUTTONS
+  const categories = [
+    { x: centerX - 200, label: '이달의 가챠' },
+    { x: centerX, label: '11월 한정' },
+    { x: centerX + 210, label: '커밍순' }
+  ];
+  this.categoryRects = [];
+  this.categoryTexts = [];
 
-    // Button group
-    const buttonLabels = ['퀘스트', '메일', '설정', '공지'];
-    const buttonRadius = 25, buttonGap = 34;
-    const buttonsGroup = this.add.container(currencyBarWidth + 60, 0);
-    buttonLabels.forEach((label, i) => {
-    const x = i * (buttonRadius * 2 + buttonGap);
-    const btn = this.add.circle(x, 0, buttonRadius, 0xffffff)
-        .setStrokeStyle(4, 0x8887f6)
-        .setInteractive({ useHandCursor: true });
-    const txt = this.add.text(x, buttonRadius + 10, label, {
-        fontSize: '22px', color: '#222', fontFamily: 'Arial'
-    }).setOrigin(0.5, 0);
+  categories.forEach((cat, index) => {
+    const rect = this.add.rectangle(cat.x, 150, 160, 48, 0xcccccc).setInteractive({ useHandCursor: true });
+    const text = this.add.text(cat.x, 150, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
 
-    btn.on('pointerover', () => btn.setFillStyle(0xf4f6ff));
-    btn.on('pointerout', () => btn.setFillStyle(0xffffff));
-    btn.on('pointerdown', () => {
-        this.showSimplePopup(label + ' 팝업입니다');
-    });
+    this.categoryRects.push(rect);
+    this.categoryTexts.push(text);
 
-    buttonsGroup.add([btn, txt]);
-});
-
-  // Assemble top bar and center
-  const topBarContainer = this.add.container(0, topBarY, [currencyGroup, buttonsGroup]);
-  const totalTopBarWidth = currencyBarWidth + 60 + (buttonLabels.length * buttonRadius * 2) + ((buttonLabels.length - 1) * buttonGap); 
-  topBarContainer.x = this.cameras.main.centerX - totalTopBarWidth / 2;
-
-    // CENTER CATEGORY BUTTONS
-    const categories = [
-        { x: centerX - 200, label: '이달의 가챠' },
-        { x: centerX, label: '11월 한정' },
-        { x: centerX + 210, label: '커밍순' }
-    ];
-    this.categoryRects = [];
-    this.categoryTexts = [];
-
-    categories.forEach((cat, index) => {
-      const rect = this.add.rectangle(cat.x, 150, 160, 48, 0xcccccc).setInteractive({ useHandCursor: true });
-      const text = this.add.text(cat.x, 150, cat.label, {fontSize: '18px', color: '#444'}).setOrigin(0.5);
-
-      this.categoryRects.push(rect);
-      this.categoryTexts.push(text);
-    
-      rect.on('pointerdown', () => {
-        categories.forEach((c, i) => {
-          if (i === index) {
-            this.categoryRects[i].setFillStyle(0x003366); // dark blue
-            this.categoryTexts[i].setColor('#fff');
-          } else {
-            this.categoryRects[i].setFillStyle(0x999999); // grey
-            this.categoryTexts[i].setColor('#444');
-          }
-        });
+    rect.on('pointerdown', () => {
+      categories.forEach((c, i) => {
+        if (i === index) {
+          this.categoryRects[i].setFillStyle(0x003366); // dark blue
+          this.categoryTexts[i].setColor('#fff');
+        } else {
+          this.categoryRects[i].setFillStyle(0x999999); // grey
+          this.categoryTexts[i].setColor('#444');
+        }
       });
-
     });
-    
-    // Large gacha placeholder box
-    this.add.rectangle(centerX, 400, 400, 400).setStrokeStyle(2, 0x000000);
+  });
 
-    // Left Lever (1회 뽑기)
-    const leftLever = this.add.circle(centerX - 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
-    this.add.rectangle(centerX - 120, 680, 28, 130, 0x1a1a1a);
-    this.add.text(centerX - 120, 760, '1회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
-    leftLever.on('pointerdown', () => this.handleLeftLeverClick());
+  // Large gacha placeholder box
+  this.add.rectangle(centerX, 600, 600, 600).setStrokeStyle(2, 0x000000);
 
-    // Right Lever (10회 뽑기)
-    const rightLever = this.add.circle(centerX + 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
-    this.add.rectangle(centerX + 120, 680, 28, 130, 0x1a1a1a);
-    this.add.text(centerX + 120, 760, '10회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
-    rightLever.on('pointerdown', () => this.handleRightLeverClick());
+  // Left Lever (1회 뽑기)
+  const leftLever = this.add.circle(centerX - 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
+  this.add.rectangle(centerX - 120, 680, 28, 130, 0x1a1a1a);
+  this.add.text(centerX - 120, 760, '1회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
+  leftLever.on('pointerdown', () => this.handleLeftLeverClick());
 
-    //////////////////////////////////////////////////////////////////
-    // Progress bar (pity gauge)
-    this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
-    this.add.rectangle(centerX - 130, 880, 100, 11, 0x333333); // progress fill
-    this.add.text(centerX, 900, 'A등급 이상 확정까지 NN회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
+  // Right Lever (10회 뽑기)
+  const rightLever = this.add.circle(centerX + 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
+  this.add.rectangle(centerX + 120, 680, 28, 130, 0x1a1a1a);
+  this.add.text(centerX + 120, 760, '10회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
+  rightLever.on('pointerdown', () => this.handleRightLeverClick());
 
-    // Skip animation checkbox
-    this.checkboxRect = this.add.rectangle(centerX - 65, 950, 24, 24, 0xffffff)
-      .setStrokeStyle(1, 0x222222)
-      .setInteractive({ useHandCursor: true });
+  //////////////////////////////////////////////////////////////////
+  // Progress bar (pity gauge)
+  this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
+  this.add.rectangle(centerX - 130, 880, 100, 11, 0x333333); // progress fill
+  this.add.text(centerX, 900, 'A등급 이상 확정까지 NN회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
 
-    // Checkmark (initially hidden)
-    this.checkmark = this.add.text(centerX - 65, 950, '✓', { 
-      fontSize: '20px', 
-      color: '#000',
-      fontStyle: 'bold'
-    }).setOrigin(0.5).setVisible(false);
-    
-    const checkboxLabel = this.add.text(centerX - 40, 950, '연출 건너뛰기', { 
-      fontSize: '18px', 
-      color: '#222' 
-    }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true });
+  // Skip animation checkbox
+  this.checkboxRect = this.add.rectangle(centerX - 65, 950, 24, 24, 0xffffff)
+    .setStrokeStyle(1, 0x222222)
+    .setInteractive({ useHandCursor: true });
 
-    // Checkbox click handler
-    this.checkboxRect.on('pointerdown', () => this.toggleSkipCheckbox());
-    checkboxLabel.on('pointerdown', () => this.toggleSkipCheckbox());
-    
-    //////////////////////////////////////////////////////////////////
-    // Bottom Navigation Bar
-    const circleRadius = 55;
-    const circleGap = 30;
-    const labels = ['장식장', '가방', '상점', '도감'];
-    const n = labels.length;
-    
-    const totalWidth = n * (circleRadius * 2) + (n - 1) * circleGap;
+  // Checkmark (initially hidden)
+  this.checkmark = this.add.text(centerX - 65, 950, '✓', {
+    fontSize: '20px',
+    color: '#000',
+    fontStyle: 'bold'
+  }).setOrigin(0.5).setVisible(false);
 
-    const centerXNav = this.cameras.main.centerX;
-    const navY = 1100; // lower down whole bottom nav bar (pixels)
-    let startXNav = centerXNav - totalWidth / 2 + circleRadius;
+  const checkboxLabel = this.add.text(centerX - 40, 950, '연출 건너뛰기', {
+    fontSize: '18px',
+    color: '#222'
+  }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true });
 
-    const arrowOffset = 60;
-    const arrowSize = 40;
+  // Checkbox click handler
+  this.checkboxRect.on('pointerdown', () => this.toggleSkipCheckbox());
+  checkboxLabel.on('pointerdown', () => this.toggleSkipCheckbox());
 
-    const leftArrow = this.add.triangle(
-      startXNav - circleRadius - arrowOffset, navY,
-      arrowSize, 0, 0, arrowSize /2, arrowSize, arrowSize, 0x222222).setInteractive({ useHandCursor: true });
+  //////////////////////////////////////////////////////////////////
+  // Bottom Navigation Bar
+  const circleRadius = 55;
+  const circleGap = 30;
+  const labels = ['장식장', '가방', '상점', '도감'];
+  const n = labels.length;
 
-    labels.forEach((label, i) => {
-      const x = startXNav + i * (circleRadius * 2 + circleGap);
-      const circleBtn = this.add.circle(x, navY, circleRadius, 0xf1f1f1).setInteractive({ useHandCursor: true });
-      const textBtn = this.add.text(x, navY, label, {
+  const totalWidth = n * (circleRadius * 2) + (n - 1) * circleGap;
+  const centerXNav = this.cameras.main.centerX;
+  const navY = 1100; // lower down whole bottom nav bar (pixels)
+  let startXNav = centerXNav - totalWidth / 2 + circleRadius;
+
+  const arrowOffset = 60;
+  const arrowSize = 40;
+
+  const leftArrow = this.add.triangle(
+    startXNav - circleRadius - arrowOffset, navY,
+    arrowSize, 0, 0, arrowSize / 2, arrowSize, arrowSize, 0x222222).setInteractive({ useHandCursor: true });
+
+  labels.forEach((label, i) => {
+    const x = startXNav + i * (circleRadius * 2 + circleGap);
+    const circleBtn = this.add.circle(x, navY, circleRadius, 0xf1f1f1).setInteractive({ useHandCursor: true });
+    const textBtn = this.add.text(x, navY, label, {
       fontSize: '26px', color: '#222', fontFamily: 'Arial', fontStyle: 'bold'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
-      circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
-      textBtn.on('pointerdown', () => this.onNavButtonClicked(label));    
-    });
+    circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
+    textBtn.on('pointerdown', () => this.onNavButtonClicked(label));
+  });
 
-    const rightArrow = this.add.triangle(
-      startXNav + (n - 1) * (circleRadius * 2 + circleGap) + circleRadius + arrowOffset, navY,
+  const rightArrow = this.add.triangle(
+    startXNav + (n - 1) * (circleRadius * 2 + circleGap) + circleRadius + arrowOffset, navY,
     0, 0, arrowSize, arrowSize / 2, 0, arrowSize, 0x222222).setInteractive({ useHandCursor: true });
 
-    leftArrow.on('pointerdown', () => {
+  leftArrow.on('pointerdown', () => {
     // Navigate to previous page group (add your logic here)
-    });
+  });
 
-    rightArrow.on('pointerdown', () => {
+  rightArrow.on('pointerdown', () => {
     // Navigate to next page group (add your logic here)
-    });
+  });
+}
 
-  }
 
   // Toggle checkbox state
   toggleSkipCheckbox() {
@@ -243,7 +203,7 @@ export default class GameScene extends Phaser.Scene {
 
     // Show right lever turn animation first
   const centerX = this.cameras.main.centerX;
-  const centerY = 400;
+  const centerY = 600;
   this.popup = this.add.container(centerX, centerY);
 
   const leverImg = this.add.image(0, 0, 'RightLever');
@@ -274,7 +234,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     const centerX = this.cameras.main.centerX;
-    const centerY = 400;
+    const centerY = 600;
     this.popup = this.add.container(centerX, centerY);
 
     // Get current capsule data
@@ -334,7 +294,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     const centerX = this.cameras.main.centerX;
-    const centerY = 400; 
+    const centerY = 600; 
     this.popup = this.add.container(centerX, centerY);
 
     if (imageName === "Gacha Result") {
@@ -378,50 +338,6 @@ export default class GameScene extends Phaser.Scene {
     }
   }
 
-  showMailPopup() {
-    
-    if (this.popup) {
-      this.popup.destroy();
-      this.popup = null;
-    }
-    const centerX = this.cameras.main.centerX;
-    const centerY = 300;
-
-    this.popup = this.add.container(centerX, centerY);
-    const bg = this.add.rectangle(0, 0, 400, 300, 0xffcce2)
-      .setStrokeStyle(2, 0x000000)
-      .setOrigin(0.5);
-    this.popup.add(bg);
-
-    const xBtnSize = 36;
-    const xBtn = this.add.text(bg.width/2 - xBtnSize, -bg.height/2 + xBtnSize, 'X', {
-      fontSize: '28px', fontStyle: 'bold', color: '#91131a', fontFamily: 'Arial'
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    this.popup.add(xBtn);
-
-    xBtn.on('pointerover', () => xBtn.setColor('#fa5555'));
-    xBtn.on('pointerout', () => xBtn.setColor('#91131a'));
-    xBtn.on('pointerdown', () => {
-      this.popup.destroy();
-      this.popup = null;
-    });
-
-    // Example mail list (you can replace with dynamic message list)
-    const mails = [
-      '메시지1: 환영합니다!',
-      '메시지2: 보상 수령하세요.',
-      '메시지3: 새 친구가 추가되었습니다.',
-      '메시지4: 이벤트 안내'
-    ];
-    
-    mails.forEach((msg, i) => {
-      const item = this.add.text(-140, -140 + i * 38, msg, {
-        fontSize: '21px', color: '#222'
-      }).setOrigin(0, 0);
-      this.popup.add(item);
-    });
-}
-
   // Right Lever Popup Display
   showRightLeverPopup() {
     if (this.popup) {
@@ -429,7 +345,7 @@ export default class GameScene extends Phaser.Scene {
       this.popup = null;
     }
     const centerX = this.cameras.main.centerX;
-    const centerY = 400;
+    const centerY = 600;
 
     this.popup = this.add.container(centerX, centerY);
 

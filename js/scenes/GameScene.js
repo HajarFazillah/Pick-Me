@@ -36,6 +36,7 @@ export default class GameScene extends Phaser.Scene {
     const startY = 40;
     this.topButtonBar = new TopButtonBar(this, startX, startY);
 
+  ////////////////////////////////////////////////////////////////
   // CENTER CATEGORY BUTTONS
   const categories = [
     { x: centerX - 200, label: '이달의 가챠' },
@@ -65,8 +66,10 @@ export default class GameScene extends Phaser.Scene {
     });
   });
 
+  //////////////////////////////////////////////////////////////////
+
   // Large gacha placeholder box
-  this.add.rectangle(centerX, 600, 600, 600).setStrokeStyle(2, 0x000000);
+  this.add.rectangle(centerX, 500, 400, 400).setStrokeStyle(2, 0x000000);
 
   // Left Lever (1회 뽑기)
   const leftLever = this.add.circle(centerX - 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });

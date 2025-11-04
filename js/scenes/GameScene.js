@@ -9,6 +9,7 @@ export default class GameScene extends Phaser.Scene {
     this.gachaResults = []; // Character names
     this.gachaCapsules = []; 
     this.currentCapsuleIndex = 0; //Which capsule currently being showed
+    this.skipAnimation = false; // Track checkbox state
   }
 
   preload() {
@@ -125,8 +126,25 @@ export default class GameScene extends Phaser.Scene {
     this.add.text(centerX, 900, 'A등급 이상 확정까지 NN회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
 
     // Skip animation checkbox
-    this.add.rectangle(centerX - 65, 950, 24, 24, 0xffffff).setStrokeStyle(1, 0x222222);
-    this.add.text(centerX - 40, 950, '연출 건너뛰기', { fontSize: '18px', color: '#222' }).setOrigin(0, 0.5);
+    this.checkboxRect = this.add.rectangle(centerX - 65, 950, 24, 24, 0xffffff)
+      .setStrokeStyle(1, 0x222222)
+      .setInteractive({ useHandCursor: true });
+
+    // Checkmark (initially hidden)
+    this.checkmark = this.add.text(centerX - 65, 950, '✓', { 
+      fontSize: '20px', 
+      color: '#000',
+      fontStyle: 'bold'
+    }).setOrigin(0.5).setVisible(false);
+    
+    const checkboxLabel = this.add.text(centerX - 40, 950, '연출 건너뛰기', { 
+      fontSize: '18px', 
+      color: '#222' 
+    }).setOrigin(0, 0.5).setInteractive({ useHandCursor: true });
+
+    // Checkbox click handler
+    this.checkboxRect.on('pointerdown', () => this.toggleSkipCheckbox());
+    checkboxLabel.on('pointerdown', () => this.toggleSkipCheckbox());
     
     //////////////////////////////////////////////////////////////////
     // Bottom Navigation Bar
@@ -173,6 +191,19 @@ export default class GameScene extends Phaser.Scene {
 
   }
 
+  // Toggle checkbox state
+  toggleSkipCheckbox() {
+    this.skipAnimation = !this.skipAnimation;
+    this.checkmark.setVisible(this.skipAnimation);
+    
+    // Optional: Visual feedback on checkbox
+    if (this.skipAnimation) {
+      this.checkboxRect.setFillStyle(0xe0e0e0);
+    } else {
+      this.checkboxRect.setFillStyle(0xffffff);
+    }
+  }
+
   handleLeftLeverClick() {
     if (this.popup) return;
 
@@ -209,7 +240,31 @@ export default class GameScene extends Phaser.Scene {
     }
 
     this.currentCapsuleIndex = 0;
+
+    // Show right lever turn animation first
+  const centerX = this.cameras.main.centerX;
+  const centerY = 400;
+  this.popup = this.add.container(centerX, centerY);
+
+  const leverImg = this.add.image(0, 0, 'RightLever');
+  leverImg.setDisplaySize(160, 160);
+  this.popup.add(leverImg);
+  leverImg.setInteractive({ useHandCursor: true });
+  
+  // When user clicks the lever animation
+  leverImg.once('pointerdown', () => {
+    this.popup.destroy();
+    this.popup = null;
+
+    // Check if skip is enabled
+    if (this.skipAnimation) {
+      // Skip directly to final grid popup
+      this.showRightLeverPopup();
+    } else {
+      // Show capsules one by one (original behavior)
     this.revealCapsulesOneByOne();
+    }
+  });
   }
 
   revealCapsulesOneByOne() {

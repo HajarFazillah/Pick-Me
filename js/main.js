@@ -4,6 +4,8 @@ import GameScene from './scenes/GameScene.js';
 
 const config = {
   type: Phaser.AUTO,
+  width: 720,    // example value
+  height: 1280,  // matches your coordinate system
   scale: {
     mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,

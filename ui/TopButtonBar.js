@@ -19,27 +19,6 @@ export default class TopButtonBar {
     createButtonBar() {
         this.scene.cameras.main.setBackgroundColor('#ffffff');
 
-        //const currencyBarWidth = 315, currencyBarHeight = 50;
-        //const coinIconRadius = 16;
-        //const buttonYOffset = currencyBarHeight + 14;
-        //const currencyGroup = this.scene.add.container(0, 0);
-
-        // Currency Bar
-        //const currencyBarGraphics = this.scene.add.graphics();
-        //currencyBarGraphics.fillStyle(0xffffff, 1);
-        //currencyBarGraphics.lineStyle(2, 0x000000, 1);
-        //currencyBarGraphics.fillRoundedRect(0, -currencyBarHeight/2, currencyBarWidth, currencyBarHeight, 14);
-        //currencyBarGraphics.strokeRoundedRect(0, -currencyBarHeight/2, currencyBarWidth, currencyBarHeight, 14);
-
-        //const coinIcon = this.scene.add.circle(coinIconRadius + 8, 0, coinIconRadius, 0xffe68a)
-        //    .setStrokeStyle(2, 0x000000).setOrigin(0.5, 0.5);
-        //const coinText = this.scene.add.text(currencyBarWidth - 150, 0, '000000000', {
-        //    fontSize: '21px', color: '#000'
-        //}).setOrigin(0.5, 0.5);
-
-        //currencyGroup.add([currencyBarGraphics, coinIcon, coinText]);
-
-        // Buttons Group
         this.buttonsGroup = this.scene.add.container(0, 48);
         this.buttonLabels.forEach((label, i) => {
             const x = i * (this.buttonRadius * 2 + this.buttonGap);
@@ -57,23 +36,10 @@ export default class TopButtonBar {
             this.buttonsGroup.add([btn, txt]);
         });
 
-        // Top Bar Container
         const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
             (this.buttonLabels.length - 1) * this.buttonGap;
-        //const totalBarWidth = currencyBarWidth + 60 + totalButtonsWidth;
-        //const topBarContainer = this.scene.add.container(0, 0);
-
         const centerX = this.scene.cameras.main.centerX;
-        //currencyGroup.x = 0;
-        //currencyGroup.y = 0;
-
         this.buttonsGroup.x = this.scene.cameras.main.centerX - totalButtonsWidth / 2;
-        // push button group to the right of currency group
-
-        //topBarContainer.add([currencyGroup, this.buttonsGroup]);
-        //topBarContainer.x = this.scene.cameras.main.centerX - totalBarWidth / 2;
-        //topBarContainer.y = 48; // Y position of top bar
-
         this.container.add(this.buttonsGroup);
     }
 

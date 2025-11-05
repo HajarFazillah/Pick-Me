@@ -51,8 +51,8 @@ export default class GameScene extends Phaser.Scene {
     this.categoryTexts = [];
     
     categories.forEach((cat, index) => {
-      const rect = this.add.rectangle(cat.x, 150, 160, 48, 0xcccccc).setInteractive({ useHandCursor: true });
-      const text = this.add.text(cat.x, 150, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
+      const rect = this.add.rectangle(cat.x, 210, 160, 48, 0xcccccc).setInteractive({ useHandCursor: true });
+      const text = this.add.text(cat.x, 210, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
 
       this.categoryRects.push(rect);
       this.categoryTexts.push(text);
@@ -73,18 +73,18 @@ export default class GameScene extends Phaser.Scene {
     //////////////////////////////////////////////////////////////////
 
     // Large gacha placeholder box
-    this.add.rectangle(centerX, 500, 400, 400).setStrokeStyle(2, 0x000000);
+    this.add.rectangle(centerX, 470, 370, 400).setStrokeStyle(2, 0x000000);
 
     // Left Lever (1회 뽑기)
-    const leftLever = this.add.circle(centerX - 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
-    this.add.rectangle(centerX - 120, 680, 28, 130, 0x1a1a1a);
-    this.add.text(centerX - 120, 760, '1회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
+    const leftLever = this.add.circle(centerX - 120, 750, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
+    this.add.rectangle(centerX - 120, 750, 28, 130, 0x1a1a1a);
+    this.add.text(centerX - 120, 840, '1회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
     leftLever.on('pointerdown', () => this.handleLeftLeverClick());
 
     // Right Lever (10회 뽑기)
-    const rightLever = this.add.circle(centerX + 120, 680, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
-    this.add.rectangle(centerX + 120, 680, 28, 130, 0x1a1a1a);
-    this.add.text(centerX + 120, 760, '10회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
+    const rightLever = this.add.circle(centerX + 120, 750, 63, 0xaaaaaa).setInteractive({ useHandCursor: true });
+    this.add.rectangle(centerX + 120, 750, 28, 130, 0x1a1a1a);
+    this.add.text(centerX + 120, 840, '10회 뽑기', { fontSize: '20px', color: '#222' }).setOrigin(0.5);
     rightLever.on('pointerdown', () => this.handleRightLeverClick());
 
     //////////////////////////////////////////////////////////////////

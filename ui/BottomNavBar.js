@@ -14,15 +14,17 @@ export default class BottomNavBar {
   createBottomNavBar() {
   const totalWidth = this.n * (this.circleRadius * 2) + (this.n - 1) * this.circleGap;
   const centerXNav = this.scene.cameras.main.centerX;
-  const startXNav = centerXNav - totalWidth / 2;
+  
+  // starting point is adjusted by adding the radius
+  // so the center if the first circle is placed correctly
+  const startXNav = centerXNav - totalWidth / 2 + this.circleRadius;
   const navY = this.navY;
-
   const arrowOffset = 60;
-  const arrowSize = 40;
+  const arrowSize = 60;
 
   // Left Arrow
   const leftArrow = this.scene.add.triangle(
-    startXNav - this.circleRadius - arrowOffset, navY,
+    startXNav - this.circleRadius + 2 - arrowOffset, navY,
     arrowSize, 0, 0, arrowSize / 2, arrowSize, arrowSize, 0x222222
   ).setInteractive({ useHandCursor: true });
 
@@ -32,9 +34,7 @@ export default class BottomNavBar {
       .setInteractive({ useHandCursor: true });
     const textBtn = this.scene.add.text(x, navY, label, {
       fontSize: '26px', color: '#222', fontFamily: 'Arial', fontStyle: 'bold'
-    })
-      .setOrigin(0.5)
-      .setInteractive({ useHandCursor: true });
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
 
     circleBtn.on('pointerdown', () => this.onNavButtonClicked(label));
     textBtn.on('pointerdown', () => this.onNavButtonClicked(label));
@@ -47,11 +47,11 @@ export default class BottomNavBar {
   ).setInteractive({ useHandCursor: true });
 
   leftArrow.on('pointerdown', () => {
-    // Navigate to previous page group (add your logic here)
+    this.scene.scene.start('PartTimeScene');
   });
 
   rightArrow.on('pointerdown', () => {
-    // Navigate to next page group (add your logic here)
+    this.scene.scene.start('GameScene');
   });
 }
 

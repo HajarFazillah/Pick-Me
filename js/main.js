@@ -1,6 +1,7 @@
 import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
 import StartScene from './scenes/StartScene.js';
 import GameScene from './scenes/GameScene.js';
+import PartTimeScene from './scenes/PartTimeScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -11,7 +12,7 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: 'game-container',                 
   },
-  scene: [GameScene]
+  scene: [GameScene, PartTimeScene]
 };
 
 const game = new Phaser.Game(config);

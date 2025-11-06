@@ -78,11 +78,11 @@ export default class GameScene extends Phaser.Scene {
     this.add.text(centerX, 900, 'A등급 이상 확정까지 NN회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
  
   }
- 
-    onNavButtonClicked(label) {
+
+  onNavButtonClicked(label) {
         console.log(label + ' clicked!');
         // TODO: Add logic here to switch UI content or change pages based on label
         // e.g., showing different containers or scenes
-      }
-
+  }
+ 
 }

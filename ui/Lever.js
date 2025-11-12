@@ -93,20 +93,18 @@ export default class Lever{
         this.showLeftLeverPopup("Capsule Open", "캡슐이 열리는 중...");
         this.leverState = 2;
       } else if (this.leverState === 2) {
+       let isPity = this.pityCounter >= this.maxPity;
+       let grade = this.getGachaResult(isPity);
+        if (isPity) {
+      this.pityCounter = 0;
+        } else {
+      this.pityCounter += 1;
+      if (this.pityCounter > this.maxPity) this.pityCounter = this.maxPity;
+    }
+        this.updateProgressBar();
         this.showLeftLeverPopup("Gacha Result", "이름이름이름");
         this.leverState = 3;
       }
-        let isPity = this.pityCounter >= this.maxPity;
-       const grade = this.getGachaResult(isPity);
-       if (grade === "S" || grade === "A") {
-      this.pityCounter = 0;
-     } else {
-      this.pityCounter++;
-      if (this.pityCounter > this.maxPity) {
-        this.pityCounter = this.maxPity;
-      }
-    }
-    this.updateProgressBar();
   }
 
 
@@ -117,21 +115,28 @@ export default class Lever{
       this.gachaResults = [];
       this.gachaCapsules = [];
 
-       for (let i = 0; i < 10; i++) {
-    let isPity = false;
-    if (this.pityCounter >= this.maxPity) isPity = true;
-    const grade = this.getGachaResult(isPity);
-    // Capsule/character result logic
+      let guaranteeUsed = false;
+      let indexOfPity = -1;
+
+    for (let i = 0; i < 10; i++) {
+    let isPity = (!guaranteeUsed && (this.pityCounter + i) >= this.maxPity);
+    let grade = this.getGachaResult(isPity);
+
+    if (isPity) {
+      grade = "A";
+      guaranteeUsed = true;
+      indexOfPity = i;
+    }
     this.gachaResults.push(characters[Math.floor(Math.random() * characters.length)]);
     this.gachaCapsules.push(capsuleColors[Math.floor(Math.random() * capsuleColors.length)]);
-    // Update counter for each capsule
-    if (grade === "S" || grade === "A") {
-      this.pityCounter = 0;
-    } else {
-      this.pityCounter++;
-    }
   }
-  // End total bar update
+
+   if (indexOfPity >= 0) {
+    this.pityCounter = 0;
+  } else {
+    this.pityCounter += 10;
+    if (this.pityCounter > this.maxPity) this.pityCounter = this.maxPity;
+  }
   this.updateProgressBar();
   this.currentCapsuleIndex = 0;
 

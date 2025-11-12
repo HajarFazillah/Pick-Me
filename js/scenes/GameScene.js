@@ -2,6 +2,7 @@ import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.j
 import TopButtonBar from '/ui/TopButtonBar.js';
 import BottomNavBar from '/ui/BottomNavBar.js';
 import Lever from '/ui/Lever.js';
+import CollectionPopup from '/ui/CollectionPopup.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -32,7 +33,15 @@ export default class GameScene extends Phaser.Scene {
 
     // Create UI components
     this.topButtonBar = new TopButtonBar(this, startX, startY);
-    this.bottomNavBar = new BottomNavBar(this, 1100);
+
+    // Create the popup manager
+    this.collectionPopup = new CollectionPopup(this);
+    this.collectionPopup.createPopup();
+
+    // Create the bottom nav bar and pass the callback
+    this.bottomNavBar = new BottomNavBar(this, 1100, this.onNavButtonClicked.bind(this));
+    console.log('GameScene created, popup ready');
+
     this.Lever = new Lever(this,120,750);
     this.Lever.createLever();
     
@@ -80,9 +89,18 @@ export default class GameScene extends Phaser.Scene {
   }
 
   onNavButtonClicked(label) {
-        console.log(label + ' clicked!');
-        // TODO: Add logic here to switch UI content or change pages based on label
-        // e.g., showing different containers or scenes
+    console.log('onNavButtonClicked() triggered for:', label);
+
+    if (label === '도감') {
+      console.log('Attempting to show popup...');
+      if (this.collectionPopup) {
+        this.collectionPopup.showPopup();
+      } else {
+        console.error('Popup object is undefined!');
+      }
+    } else {
+      if (this.collectionPopup) this.collectionPopup.hidePopup();
+    }
   }
- 
+
 }

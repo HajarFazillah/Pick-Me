@@ -48,7 +48,13 @@ export default class CollectionPopup {
     this.popupContainer.setDepth(999);
 
     // Overlay
-    const overlay = scene.add.rectangle(centerX, centerY, 1600, 900, 0x000000, 0.5).setInteractive();
+    const overlay = scene.add.rectangle(
+    scene.cameras.main.centerX,
+    scene.cameras.main.centerY,
+    scene.cameras.main.width,
+    scene.cameras.main.height,
+    0x000000, 0.5).setInteractive();
+
 
     // Popup box
     const box = scene.add.rectangle(centerX, centerY, this.popupWidth, this.popupHeight, 0xf5f5f5).setStrokeStyle(2, 0x000000);
@@ -151,8 +157,8 @@ export default class CollectionPopup {
 
   refreshTabs() {
     for (let i = 0; i < this.tabButtons.length; i++) {
-      const isSelected = (i === 1 && this.selectedTab === 'item') ||
-                        (i === 0 && this.selectedTab === 'story');
+      const isSelected = (i === 1 && this.selectedTab === 'story') ||
+                        (i === 0 && this.selectedTab === 'item');
       this.tabButtons[i].fillColor = isSelected ? 0x999999 : 0xcccccc;
       this.tabTexts[i].setColor(isSelected ? '#fff' : '#000');
     }

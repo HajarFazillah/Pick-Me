@@ -44,6 +44,8 @@ export default class GameScene extends Phaser.Scene {
 
     this.Lever = new Lever(this,120,750);
     this.Lever.createLever();
+    this.createProgressBar();
+    this.Lever.setProgressBarUpdateCallback(this.updateProgressBarUI.bind(this));
     
     // CENTER CATEGORY BUTTONS
     const categories = [
@@ -82,11 +84,35 @@ export default class GameScene extends Phaser.Scene {
 
     //////////////////////////////////////////////////////////////////
     // Progress bar (pity gauge)
-    this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
-    this.add.rectangle(centerX - 130, 880, 100, 11, 0x333333); // progress fill
-    this.add.text(centerX, 900, 'A등급 이상 확정까지 NN회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
+    this.createProgressBar(); 
+    this.Lever.setProgressBarUpdateCallback(this.updateProgressBarUI.bind(this));
  
   }
+  createProgressBar() {
+   const centerX = this.cameras.main.centerX;
+   this.progressBarBg = this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
+   this.progressBarFill_maxWidth = 270;
+   // Fill: x := left edge
+   const fillLeft = centerX - 370/2;
+   this.progressBarFill = this.add.rectangle(fillLeft, 880, 0, 11, 0x333333)
+    .setOrigin(0, 0.5); 
+   if (this.progressLabel) this.progressLabel.destroy(); // prevent duplicate
+   this.progressLabel = this.add.text(centerX, 900, 'A등급 이상 확정까지 101회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
+ }
+
+  updateProgressBarUI(current, max) {
+   const centerX = this.cameras.main.centerX;
+   const fillMaxWidth = this.progressBarFill_maxWidth; // 270 by default
+   const fillLeft = centerX - 370/2;
+   // Fill progress calculation
+   let fillWidth = Math.min(1, current / max) * fillMaxWidth;
+   this.progressBarFill.width = fillWidth;
+   this.progressBarFill.x = fillLeft; // Always align to left of background
+
+   let remain = max - current + 1;
+   if (remain < 1) remain = 1;
+   this.progressLabel.setText(`A등급 이상 확정까지 ${remain}회`);
+ }
 
   onNavButtonClicked(label) {
     console.log('onNavButtonClicked() triggered for:', label);

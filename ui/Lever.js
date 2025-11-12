@@ -11,8 +11,30 @@ export default class Lever{
     this.gachaCapsules = []; 
     this.currentCapsuleIndex = 0; //Which capsule currently being showed
     this.skipAnimation = false; // Track checkbox state
-  }
- 
+    this.pityCounter = 0; // Counts pulls since last A or higher
+    this.maxPity = 100;   // At 101st, guarantee A or higher
+    this.onProgressUpdate = null; // Callback for updating progress UI
+   }
+   setProgressBarUpdateCallback(callback) {
+    this.onProgressUpdate = callback;
+   }
+
+   updateProgressBar() {
+    if (this.onProgressUpdate) {
+      this.onProgressUpdate(this.pityCounter, this.maxPity);
+    }
+   }
+
+   getGachaResult(isPity) {
+    if (isPity) return "A";
+    const r = Math.random() * 100;
+    if (r < 0.8) return "S";
+    if (r < 5) return "A";
+    if (r < 19) return "B";
+    if (r < 50) return "C";
+    return "D";
+   }
+
   createLever(){
     const centerX = this.scene.cameras.main.centerX;
 
@@ -74,29 +96,44 @@ export default class Lever{
         this.showLeftLeverPopup("Gacha Result", "이름이름이름");
         this.leverState = 3;
       }
+        let isPity = this.pityCounter >= this.maxPity;
+       const grade = this.getGachaResult(isPity);
+       if (grade === "S" || grade === "A") {
+      this.pityCounter = 0;
+     } else {
+      this.pityCounter++;
+      if (this.pityCounter > this.maxPity) {
+        this.pityCounter = this.maxPity;
+      }
     }
+    this.updateProgressBar();
+  }
+
 
     handleRightLeverClick() {
       if (this.popup) return;
-  
       const characters = ['Char_Cake', 'Char_Snow', 'Char_Pen', 'Char_Happy'];
       const capsuleColors = ['CapsuleOpen_Yellow', 'CapsuleOpen_Blue'];
-    
       this.gachaResults = [];
       this.gachaCapsules = [];
 
-      //Generate 10 random results > pick random character and capsule color
-      for (let i = 0; i < 10; i++) { 
-        this.gachaResults.push(
-          characters[Math.floor(Math.random() * characters.length)]
-        );
-
-        this.gachaCapsules.push(
-          capsuleColors[Math.floor(Math.random() * capsuleColors.length)]
-        );
-      }
-
-      this.currentCapsuleIndex = 0;
+       for (let i = 0; i < 10; i++) {
+    let isPity = false;
+    if (this.pityCounter >= this.maxPity) isPity = true;
+    const grade = this.getGachaResult(isPity);
+    // Capsule/character result logic
+    this.gachaResults.push(characters[Math.floor(Math.random() * characters.length)]);
+    this.gachaCapsules.push(capsuleColors[Math.floor(Math.random() * capsuleColors.length)]);
+    // Update counter for each capsule
+    if (grade === "S" || grade === "A") {
+      this.pityCounter = 0;
+    } else {
+      this.pityCounter++;
+    }
+  }
+  // End total bar update
+  this.updateProgressBar();
+  this.currentCapsuleIndex = 0;
 
       // Show right lever turn animation first
       const centerX = this.scene.cameras.main.centerX;
@@ -297,5 +334,6 @@ export default class Lever{
         this.popup.destroy();
         this.popup = null;
       });
+      
     }
 }

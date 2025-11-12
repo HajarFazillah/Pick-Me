@@ -39,9 +39,20 @@ export default class TopButtonBar {
         const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
             (this.buttonLabels.length - 1) * this.buttonGap;
         const centerX = this.scene.cameras.main.centerX;
-        this.buttonsGroup.x = this.scene.cameras.main.centerX - totalButtonsWidth / 2;
+        this.buttonsGroup.x = centerX - totalButtonsWidth / 2;
+        
+        this.updateBarPosition();
         this.container.add(this.buttonsGroup);
+        this.scene.scale.on('resize', () => this.updateBarPosition());
     }
+
+    updateBarPosition() {
+        const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
+        (this.buttonLabels.length - 1) * this.buttonGap;
+        const centerX = this.scene.cameras.main.centerX;
+        this.buttonsGroup.x = centerX - totalButtonsWidth / 2;  
+    }   
+
 
     showSimplePopup(message) {
     
@@ -51,7 +62,7 @@ export default class TopButtonBar {
         }
     
         const centerX = this.scene.cameras.main.centerX;
-        const centerY = 300;
+        const centerY = 450;
 
         this.popup = this.scene.add.container(centerX, centerY);
         const bg = this.scene.add.rectangle(0, 0, 360, 200, 0xe0e0e0)
@@ -78,6 +89,7 @@ export default class TopButtonBar {
         });
     }
 
+    /*
     showMailPopup() {
         
         if (this.popup) {
@@ -120,6 +132,6 @@ export default class TopButtonBar {
             }).setOrigin(0, 0);
         this.popup.add(item);
         });
-    }
+    }*/
 
 }

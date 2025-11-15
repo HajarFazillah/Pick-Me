@@ -1,4 +1,5 @@
 import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
+import QuestPopup from '/ui/QuestPopup.js';
 
 // TopButtonBar.js
 
@@ -11,8 +12,8 @@ export default class TopButtonBar {
         this.buttonRadius = 25;
         this.buttonGap = 34;
         this.buttonLabels = ['퀘스트', '메일', '설정', '공지'];
-        
         this.popup = null;
+        this.questPopup = new QuestPopup(scene);
         this.createButtonBar();
     }
 
@@ -31,7 +32,28 @@ export default class TopButtonBar {
 
             btn.on('pointerover', () => btn.setFillStyle(0xf4f6ff));
             btn.on('pointerout', () => btn.setFillStyle(0xffffff));
-            btn.on('pointerdown', () => this.showSimplePopup(label + ' 팝업입니다'));
+            btn.on('pointerdown', () => {
+        if (label === '퀘스트') {
+            // Example quest data, fill with your real data later!
+        let questData = {
+            weekly: {
+                title: '일일 퀘스트 모두 달성',
+                curValue: 4,
+                goalValue: 5,
+                status: "진행중", // or "완료", "수령"
+            },
+            quests: [
+                { title: "일일 출석 체크", curValue: 1, goalValue: 1, status: "수령" },
+                { title: "키링 뽑기 20회", curValue: 18, goalValue: 20, status: "진행중" },
+                { title: "아르바이트 클릭 100회", curValue: 100, goalValue: 100, status: "완료" },
+                { title: "광고 시청 3회", curValue: 1, goalValue: 3, status: "진행중" }
+            ]
+        };
+        this.questPopup.show(questData);
+    } else {
+        this.showSimplePopup(label + ' 팝업입니다');
+    }
+});
 
             this.buttonsGroup.add([btn, txt]);
         });

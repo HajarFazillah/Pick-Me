@@ -91,7 +91,7 @@ export default class GameScene extends Phaser.Scene {
   createProgressBar() {
    const centerX = this.cameras.main.centerX;
    this.progressBarBg = this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
-   this.progressBarFill_maxWidth = 270;
+   this.progressBarFill_maxWidth = 370;
    // Fill: x := left edge
    const fillLeft = centerX - 370/2;
    this.progressBarFill = this.add.rectangle(fillLeft, 880, 0, 11, 0x333333)
@@ -102,7 +102,7 @@ export default class GameScene extends Phaser.Scene {
 
   updateProgressBarUI(current, max) {
    const centerX = this.cameras.main.centerX;
-   const fillMaxWidth = this.progressBarFill_maxWidth; // 270 by default
+   const fillMaxWidth = this.progressBarFill_maxWidth;
    const fillLeft = centerX - 370/2;
    // Fill progress calculation
    let fillWidth = Math.min(1, current / max) * fillMaxWidth;

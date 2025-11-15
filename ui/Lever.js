@@ -201,7 +201,6 @@ export default class Lever{
 
           // Show character result
           const charImg = this.scene.add.image(0, 0, charKey);
-          charImg.setDisplaySize(109, 133); 
           this.popup.add(charImg);   
           charImg.setInteractive({useHandCursor: true});
 
@@ -304,7 +303,7 @@ export default class Lever{
           if (itemIndex >= this.gachaResults.length) break; // Safety check
     
           const x = startX + col * 60;          // Horizontal position (centered per row)
-          const y = -80 + row * 90;             // Vertical position (row spacing)
+          const y = -100 + row * 90;             // Vertical position (row spacing)
           const char = this.scene.add.image(x, y, this.gachaResults[itemIndex]);
           char.setDisplaySize(80, 80);
           this.popup.add(char);

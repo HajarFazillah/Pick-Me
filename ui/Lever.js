@@ -200,8 +200,9 @@ export default class Lever{
           capsuleImg.setVisible(false); // Hide capsule
 
           // Show character result
-          const charImg = this.scene.add.image(0, 0, charKey).setScale(1);
-          this.popup.add(charImg);
+          const charImg = this.scene.add.image(0, 0, charKey);
+          charImg.setDisplaySize(109, 133); 
+          this.popup.add(charImg);   
           charImg.setInteractive({useHandCursor: true});
 
           // When user clicks character 
@@ -304,7 +305,8 @@ export default class Lever{
     
           const x = startX + col * 60;          // Horizontal position (centered per row)
           const y = -80 + row * 90;             // Vertical position (row spacing)
-          const char = this.scene.add.image(x, y, this.gachaResults[itemIndex]).setScale(0.5);
+          const char = this.scene.add.image(x, y, this.gachaResults[itemIndex]);
+          char.setDisplaySize(80, 80);
           this.popup.add(char);
     
           itemIndex++;

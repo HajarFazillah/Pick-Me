@@ -22,17 +22,17 @@ export default class QuestPopup {
         const centerY = this.scene.cameras.main.centerY;
 
         // Sizing constants
-        const scale = 1.5;
-        const bgWidth = 420;
-        const bgHeight = 480;
-        const questBoxWidth = 370 * scale;
-        const questBoxHeight = 65 * scale;
-        const weeklyBoxHeight = 103 * scale;
-        const fontLg = 19 * scale;
-        const fontMd = 17 * scale;
-        const progressBarWidth = 170 * scale;
-        const progressBarHeight = 11 * scale;
-        const iconSize = 56 * scale;
+        const scale = 1;
+        const bgWidth = 500;
+        const bgHeight = 700;
+        const questBoxWidth = 450 * scale;
+        const questBoxHeight = 85 * scale;
+        const weeklyBoxHeight = 110 * scale;
+        const fontLg = 23 * scale;
+        const fontMd = 20 * scale;
+        const progressBarWidth = 260 * scale;
+        const progressBarHeight = 13 * scale;
+        const iconSize = 70 * scale;
         const gap = 18 * scale;  // spacing between boxes
 
         // Main popup box
@@ -106,18 +106,18 @@ this.timerEvent = this.scene.time.addEvent({
 // --- Center all quest boxes within the background ---
         const n = allQuests.length;
         const totalBoxesHeight = weeklyBoxHeight + (n - 1) * questBoxHeight;
-        const firstBoxStartY = -totalBoxesHeight / 2 + weeklyBoxHeight / 2;
+        const firstBoxStartY = -totalBoxesHeight / 2 + weeklyBoxHeight / 2 + gap;
 
         allQuests.forEach((quest, idx) => {
             let baseY;
             if (idx === 0) {
                 // Weekly quest 
-                baseY = firstBoxStartY;
+                baseY = firstBoxStartY + weeklyBoxHeight / 4 + (idx - 1) * (questBoxHeight + gap) + questBoxHeight / 3;
                 const questBg = this.scene.add.rectangle(0, baseY, questBoxWidth, weeklyBoxHeight, 0xdabbfd).setOrigin(0.5);
                 this.popup.add(questBg);
 
                 // "월요일 보상" top white
-                this.popup.add(this.scene.add.text(0, baseY - weeklyBoxHeight / 2 + 18 * scale, "월요일 보상", {
+                this.popup.add(this.scene.add.text(0, baseY - weeklyBoxHeight / 2 + 20 * scale, "월요일 보상", {
                     fontSize: fontMd,
                     color: "#ffffff"
                 }).setOrigin(0.5));
@@ -145,7 +145,7 @@ this.timerEvent = this.scene.time.addEvent({
                 this.popup.add(btn);
             } else {
                 // Regular quests
-                baseY = firstBoxStartY + weeklyBoxHeight/2 + (idx-1)*questBoxHeight + questBoxHeight/2;
+                baseY = firstBoxStartY + weeklyBoxHeight / 4 + (idx - 1) * (questBoxHeight + gap) + questBoxHeight / 2;
                 const questBg = this.scene.add.rectangle(0, baseY, questBoxWidth, questBoxHeight, 0xffd55c).setOrigin(0.5);
                 this.popup.add(questBg);
 
@@ -174,18 +174,29 @@ this.timerEvent = this.scene.time.addEvent({
         });
 
         // --- X Button Bottom Left
-       // X button (bottom left)
-        const closeBtn = this.scene.add.text(-bgWidth * scale / 2 + 40 * scale, bgHeight * scale / 2 - 40 * scale, 'X',
-            { fontSize: Math.round(32 * scale), color: '#c70a2a' })
-            .setOrigin(0.5).setInteractive({ useHandCursor: true });
-        this.popup.add(closeBtn);
-        closeBtn.on('pointerdown', () => {
-            this.popup.destroy();
-            this.popup = null;
-            if (this.timerEvent) {
-                this.timerEvent.remove();
-                this.timerEvent = null;
-            }
-        });
+       const xBtnSize = 48; 
+const closeBtn = this.scene.add.text(
+    -bgWidth * scale / 2 + xBtnSize,  // X: left edge + offset
+    bgHeight * scale / 1.9 - xBtnSize,  // Y: bottom edge - offset
+    'X',
+    {
+      fontSize: '28px',
+      fontStyle: 'bold',
+      color: '#91131a',
+      fontFamily: 'Arial'
+    }
+).setOrigin(0.5).setInteractive({ useHandCursor: true });
+
+closeBtn.on('pointerover', () => closeBtn.setColor('#fa5555'));
+closeBtn.on('pointerout', () => closeBtn.setColor('#91131a'));
+closeBtn.on('pointerdown', () => {
+    this.popup.destroy();
+    this.popup = null;
+    if (this.timerEvent) {
+        this.timerEvent.remove();
+        this.timerEvent = null;
+    }
+});
+this.popup.add(closeBtn);
     }
 }

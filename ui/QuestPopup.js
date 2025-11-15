@@ -150,10 +150,10 @@ this.timerEvent = this.scene.time.addEvent({
                 this.popup.add(questBg);
 
                 // Title (left)
-                this.popup.add(this.scene.add.text(-questBoxWidth/2 + 40 * scale, baseY - 13 * scale, quest.title, {
+                this.popup.add(this.scene.add.text(-questBoxWidth/2 + 40 * scale, baseY, quest.title, {
                     fontSize: fontLg,
                     color: "#222"
-                }).setOrigin(0, 0));
+                }).setOrigin(0, 0.5));
 
                 // Progress bar
                 const pbBg = this.scene.add.rectangle(-questBoxWidth/2 + 40 * scale, baseY + 18 * scale, progressBarWidth, progressBarHeight, 0xffffff)

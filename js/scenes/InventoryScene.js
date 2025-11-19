@@ -18,6 +18,7 @@ export default class InventoryScene extends Phaser.Scene {
   create() {
     const centerX = this.cameras.main.centerX;
     const centerY = this.cameras.main.centerY;
+    const offsetY = -100;
 
     // === UI Components ===
     const startX = centerX - 240;
@@ -29,7 +30,7 @@ export default class InventoryScene extends Phaser.Scene {
     // === Inventory Box ===
     const boxWidth = 550;
     const boxHeight = 750;
-    const box = this.add.rectangle(centerX, centerY + 20, boxWidth, boxHeight, 0xf5f5f5)
+    const box = this.add.rectangle(centerX, centerY + 20 + offsetY, boxWidth, boxHeight, 0xf5f5f5)
       .setStrokeStyle(2, 0x000000);
 
     // === Grid of Items ===
@@ -38,7 +39,7 @@ export default class InventoryScene extends Phaser.Scene {
     const cellWidth = 150;
     const cellHeight = 100;
     const startGridX = centerX - (cols - 1) * (cellWidth / 2);
-    const startGridY = centerY - (rows / 2) * cellHeight + 60;
+    const startGridY = centerY - (rows / 2) * cellHeight + 60 + offsetY;
 
     const itemKeys = ['Char_Cake', 'Char_Snow', 'Char_Pen', 'Char_Happy'];
     

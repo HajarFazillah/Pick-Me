@@ -6,8 +6,8 @@ export default class BottomNavBar {
     this.circleGap = 30;
     this.labels = ['장식장', '가방', '상점', '도감'];
     this.n = this.labels.length;
-
     this.onButtonClicked = onButtonClicked;
+    this.mainScenes = ['GameScene', 'PartTimeScene', 'InventoryScene'];
     this.createBottomNavBar();
   }
 
@@ -52,12 +52,25 @@ export default class BottomNavBar {
       0, 0, arrowSize, arrowSize / 2, 0, arrowSize, 0x222222
     ).setInteractive({ useHandCursor: true });
 
+    // === PAGE NAVIGATION LOGIC ===
+    const currentSceneKey = this.scene.scene.key;
+    const currentIndex = this.mainScenes.indexOf(currentSceneKey);
+
+    // Left arrow → previous scene
     leftArrow.on('pointerdown', () => {
-      this.scene.scene.start('PartTimeScene');
+      const prevIndex = (currentIndex - 1 + this.mainScenes.length) % this.mainScenes.length;
+      const targetScene = this.mainScenes[prevIndex];
+      console.log(`Left arrow → going to ${targetScene}`);
+      this.scene.scene.start(targetScene);
     });
 
+    // Right arrow → next scene
     rightArrow.on('pointerdown', () => {
-      this.scene.scene.start('GameScene');
+      const nextIndex = (currentIndex + 1) % this.mainScenes.length;
+      const targetScene = this.mainScenes[nextIndex];
+      console.log(`Right arrow → going to ${targetScene}`);
+      this.scene.scene.start(targetScene);
     });
+  
   }
 }

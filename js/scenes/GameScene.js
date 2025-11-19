@@ -23,7 +23,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('Char_Pen', 'assets/Char_Pen.png');
     this.load.image('Char_Happy', 'assets/Char_Happy.png');
     // Other images can be add here too
-  } 
+  }
 
   create() {
     

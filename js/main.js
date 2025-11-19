@@ -3,6 +3,7 @@ import StartScene from './scenes/StartScene.js';
 import GameScene from './scenes/GameScene.js';
 import PartTimeScene from './scenes/PartTimeScene.js';
 import CollectionPopup from '../ui/CollectionPopup.js';
+import InventoryScene from './scenes/InventoryScene.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -13,7 +14,7 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: 'game-container',                 
   },
-  scene: [GameScene, PartTimeScene, CollectionPopup]
+  scene: [GameScene, PartTimeScene, CollectionPopup, InventoryScene]
 };
 
 const game = new Phaser.Game(config);

@@ -7,8 +7,20 @@ html, body {
   background: #fff;
 }
 #game-container {
-  width: 360px;
-  height: 1280px;
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
+  touch-action: none; /* improves mobile touch */
+  display: flex;
+}
+canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100vw;
+  max-height: 100vh;
 }

@@ -6,6 +6,8 @@ export default class StartScene extends Phaser.Scene {
   }
 
   create() {
+    console.log("Loaded:", this.scene.key);
+
     const centerX = this.cameras.main.centerX;
     const centerY = this.cameras.main.centerY;
 

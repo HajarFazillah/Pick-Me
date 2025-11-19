@@ -30,9 +30,10 @@ export default class PartTimeScene extends Phaser.Scene {
     //this.countCoin.setProgress(0.4);
 
     // === Three small boxes ===
-    let boxStartX = cx - 150;
+    let boxStartX = cx - 155;
     for (let i = 0; i < 3; i++) {
-      this.add.rectangle(boxStartX + i * 60, 280, 40, 40, 0xcccccc)
+      // i * gap, up/down, size 40x40
+      this.add.rectangle(boxStartX + i * 60, 300, 40, 40, 0xcccccc)
         .setStrokeStyle(2, 0x000000)
         .setOrigin(0.5);
     }
@@ -44,7 +45,7 @@ export default class PartTimeScene extends Phaser.Scene {
     this.heart = new HeartButton(this, cx + 160, cy - 330);
 
     // === CLICK Button ===
-    this.clickButton = new LargeClickButton(this, cx, cy + 300);
+    this.clickButton = new LargeClickButton(this, cx, cy + 220);
 
     // === Bottom Navigation ===
     this.bottomNav = new BottomNavBar(this);

@@ -26,7 +26,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    
+    console.log("Loaded:", this.scene.key);
+
     const centerX = this.cameras.main.centerX;
     const startX = centerX - 240;
     const startY = 40;

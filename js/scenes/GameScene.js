@@ -3,6 +3,8 @@ import TopButtonBar from '/ui/TopButtonBar.js';
 import BottomNavBar from '/ui/BottomNavBar.js';
 import Lever from '/ui/Lever.js';
 import CollectionPopup from '/ui/CollectionPopup.js';
+import CategoryButton from '/ui/CategoryButton.js';
+import CategoryButtonGroup from '/ui/CategoryButtonGroup.js';
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -32,63 +34,24 @@ export default class GameScene extends Phaser.Scene {
     const startX = centerX - 240;
     const startY = 40;
 
-    // Create UI components
+    // Create UI components (in order from  top to bottom of the page)
     this.topButtonBar = new TopButtonBar(this, startX, startY);
-
-    // Create the popup manager
     this.collectionPopup = new CollectionPopup(this);
     this.collectionPopup.createPopup();
-
-    // Create the bottom nav bar and pass the callback
+    this.categoryGroup = new CategoryButtonGroup(this,centerX,(label) => this.onCategoryClicked(label));
+    this.categoryGroup.activateDefault();
+    // Large gacha placeholder box
+    this.add.rectangle(centerX, 470, 370, 400).setStrokeStyle(2, 0x000000);
+    ///////////////////////////////////////////////////////////////////
     this.bottomNavBar = new BottomNavBar(this, 1100, this.onNavButtonClicked.bind(this));
-    console.log('GameScene created, popup ready');
-
     this.Lever = new Lever(this,120,750);
     this.Lever.createLever();
     this.createProgressBar();
     this.Lever.setProgressBarUpdateCallback(this.updateProgressBarUI.bind(this));
-    
-    // CENTER CATEGORY BUTTONS
-    const categories = [
-      { x: centerX - 200, label: '이달의 가챠' },
-      { x: centerX, label: '11월 한정' },
-      { x: centerX + 210, label: '커밍순' }
-    ];
-  
-    this.categoryRects = [];
-    this.categoryTexts = [];
-    
-    categories.forEach((cat, index) => {
-      const rect = this.add.rectangle(cat.x, 210, 160, 48, 0xcccccc).setInteractive({ useHandCursor: true });
-      const text = this.add.text(cat.x, 210, cat.label, { fontSize: '18px', color: '#444' }).setOrigin(0.5);
-
-      this.categoryRects.push(rect);
-      this.categoryTexts.push(text);
-
-      rect.on('pointerdown', () => {
-        categories.forEach((c, i) => {
-          if (i === index) {
-            this.categoryRects[i].setFillStyle(0x003366); // dark blue
-            this.categoryTexts[i].setColor('#fff');
-          } else {
-            this.categoryRects[i].setFillStyle(0x999999); // grey
-            this.categoryTexts[i].setColor('#444');
-          }
-        });
-      });
-    });
-
     //////////////////////////////////////////////////////////////////
-
-    // Large gacha placeholder box
-    this.add.rectangle(centerX, 470, 370, 400).setStrokeStyle(2, 0x000000);
-
-    //////////////////////////////////////////////////////////////////
-    // Progress bar (pity gauge)
-    this.createProgressBar(); 
-    this.Lever.setProgressBarUpdateCallback(this.updateProgressBarUI.bind(this));
- 
+    
   }
+
   createProgressBar() {
    const centerX = this.cameras.main.centerX;
    this.progressBarBg = this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
@@ -115,9 +78,10 @@ export default class GameScene extends Phaser.Scene {
    this.progressLabel.setText(`A등급 이상 확정까지 ${remain}회`);
  }
 
+  onCategoryClicked(label) {console.log("Selected:", label);}
+
   onNavButtonClicked(label) {
     console.log('onNavButtonClicked() triggered for:', label);
-
     if (label === '도감') {
       console.log('Attempting to show popup...');
       if (this.collectionPopup) {

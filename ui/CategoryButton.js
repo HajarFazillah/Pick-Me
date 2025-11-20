@@ -1,29 +1,39 @@
 export default class CategoryButton {
-  constructor(scene, x, y, label, onClick) {
+  constructor(scene, x, y, label, config) {
     this.scene = scene;
     this.label = label;
-    this.onClick = onClick;
 
-    this.rect = scene.add.rectangle(x, y, 160, 48, 0x999999)
-      .setInteractive({ useHandCursor: true });
+    // Config = { off, on, disabled?, onClick? }
+    this.offTexture = config.off;
+    this.onTexture = config.on;
+    this.disabled = config.disabled ?? false;
+    this.onClick = config.onClick ?? null;
 
-    this.text = scene.add.text(x, y, label, {
-      fontSize: "18px",
-      color: "#444"
-    }).setOrigin(0.5);
+    // Create button image
+    this.bg = scene.add.image(x, y, this.offTexture).setOrigin(0.5);
+    this.bg.setScale(1.5); // adjust size as needed
 
-    this.rect.on("pointerdown", () => {
-      if (this.onClick) this.onClick(this);
-    });
+    // If NOT disabled → make interactive
+    if (!this.disabled) {
+      this.bg.setInteractive({ useHandCursor: true });
+      this.bg.on("pointerdown", () => {
+        if (this.onClick) this.onClick(this);
+      });
+    }
+
+    // Grey-out disabled
+    if (this.disabled) {
+      this.bg.setAlpha(0.5);
+    }
   }
 
   activate() {
-    this.rect.setFillStyle(0x003366);
-    this.text.setColor("#ffffff");
+    if (!this.disabled) {
+      this.bg.setTexture(this.onTexture);
+    }
   }
 
   deactivate() {
-    this.rect.setFillStyle(0x999999);
-    this.text.setColor("#444444");
+    this.bg.setTexture(this.offTexture);
   }
 }

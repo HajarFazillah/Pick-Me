@@ -23,7 +23,7 @@ export default class CategoryButton {
 
     // Grey-out disabled
     if (this.disabled) {
-      this.bg.setAlpha(0.5);
+      this.bg.setAlpha(1.0);
     }
   }
 

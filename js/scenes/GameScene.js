@@ -24,6 +24,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('Char_Snow', 'assets/Char_Snow.png');
     this.load.image('Char_Pen', 'assets/Char_Pen.png');
     this.load.image('Char_Happy', 'assets/Char_Happy.png');
+    this.load.image("cat1BtnOff", "assets/ButtonCat1_Off.png");
+    this.load.image("cat1BtnOn", "assets/ButtonCat1_On.png");
+    this.load.image("cat2BtnOff", "assets/ButtonCat2_Off.png");
+    this.load.image("cat2BtnOn", "assets/ButtonCat2_On.png");
+    this.load.image("cat3BtnOff", "assets/ButtonCat3_Off.png");
     // Other images can be add here too
   }
 
@@ -40,15 +45,12 @@ export default class GameScene extends Phaser.Scene {
     this.collectionPopup.createPopup();
     this.categoryGroup = new CategoryButtonGroup(this,centerX,(label) => this.onCategoryClicked(label));
     this.categoryGroup.activateDefault();
-    // Large gacha placeholder box
     this.add.rectangle(centerX, 470, 370, 400).setStrokeStyle(2, 0x000000);
-    ///////////////////////////////////////////////////////////////////
     this.bottomNavBar = new BottomNavBar(this, 1100, this.onNavButtonClicked.bind(this));
     this.Lever = new Lever(this,120,750);
     this.Lever.createLever();
     this.createProgressBar();
     this.Lever.setProgressBarUpdateCallback(this.updateProgressBarUI.bind(this));
-    //////////////////////////////////////////////////////////////////
     
   }
 
@@ -56,10 +58,8 @@ export default class GameScene extends Phaser.Scene {
    const centerX = this.cameras.main.centerX;
    this.progressBarBg = this.add.rectangle(centerX, 880, 370, 11, 0xffffff).setStrokeStyle(1, 0x1a1a1a);
    this.progressBarFill_maxWidth = 370;
-   // Fill: x := left edge
-   const fillLeft = centerX - 370/2;
-   this.progressBarFill = this.add.rectangle(fillLeft, 880, 0, 11, 0x333333)
-    .setOrigin(0, 0.5); 
+   const fillLeft = centerX - 370/2;  // Fill: x := left edge
+   this.progressBarFill = this.add.rectangle(fillLeft, 880, 0, 11, 0x333333).setOrigin(0, 0.5); 
    if (this.progressLabel) this.progressLabel.destroy(); // prevent duplicate
    this.progressLabel = this.add.text(centerX, 900, 'A등급 이상 확정까지 101회', { fontSize: '17px', color: '#222' }).setOrigin(0.5);
  }
@@ -68,8 +68,7 @@ export default class GameScene extends Phaser.Scene {
    const centerX = this.cameras.main.centerX;
    const fillMaxWidth = this.progressBarFill_maxWidth;
    const fillLeft = centerX - 370/2;
-   // Fill progress calculation
-   let fillWidth = Math.min(1, current / max) * fillMaxWidth;
+   let fillWidth = Math.min(1, current / max) * fillMaxWidth; // Fill progress calculation
    this.progressBarFill.width = fillWidth;
    this.progressBarFill.x = fillLeft; // Always align to left of background
 

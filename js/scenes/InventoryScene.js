@@ -1,6 +1,7 @@
 import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
 import TopButtonBar from '/ui/TopButtonBar.js';
 import BottomNavBar from '/ui/BottomNavBar.js';
+import CollectionPopup from '/ui/CollectionPopup.js';
 
 export default class InventoryScene extends Phaser.Scene {
   constructor() {
@@ -16,6 +17,8 @@ export default class InventoryScene extends Phaser.Scene {
   }
 
   create() {
+    console.log("Loaded:", this.scene.key);
+
     const centerX = this.cameras.main.centerX;
     const centerY = this.cameras.main.centerY;
     const offsetY = -100;
@@ -25,6 +28,8 @@ export default class InventoryScene extends Phaser.Scene {
     const startY = 40;
 
     this.topButtonBar = new TopButtonBar(this, startX, startY);
+    this.collectionPopup = new CollectionPopup(this);
+    this.collectionPopup.createPopup();
     this.bottomNavBar = new BottomNavBar(this, 1100, this.onNavButtonClicked.bind(this));
 
     // === Inventory Box ===
@@ -67,7 +72,9 @@ export default class InventoryScene extends Phaser.Scene {
   onNavButtonClicked(label) {
     console.log('InventoryScene - button clicked:', label);
     if (label === '도감') {
-      this.scene.start('GameScene'); // return to main scene
+      if (this.collectionPopup) this.collectionPopup.showPopup();
+    } else {
+      if (this.collectionPopup) this.collectionPopup.hidePopup();
     }
   }
-}
+} 

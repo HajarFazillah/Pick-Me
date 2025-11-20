@@ -4,7 +4,6 @@ import TopButtonBar from '/ui/TopButtonBar.js';
 import BottomNavBar from '/ui/BottomNavBar.js';
 import PartTimeFrame from '/ui/PartTimeFrame.js';
 import HeartButton from '/ui/HeartButton.js';
-
 import LargeClickButton from '/ui/LargeClickButton.js';
 
 export default class PartTimeScene extends Phaser.Scene {
@@ -12,7 +11,9 @@ export default class PartTimeScene extends Phaser.Scene {
     super('PartTimeScene');
   }
 
-  preload() {}
+  preload() {
+    this.load.image("LargeClickButton", "assets/LargeClickButton.png");
+  }
 
   create() {
     console.log("Loaded:", this.scene.key);
@@ -45,7 +46,10 @@ export default class PartTimeScene extends Phaser.Scene {
     this.heart = new HeartButton(this, cx + 160, cy - 330);
 
     // === CLICK Button ===
-    this.clickButton = new LargeClickButton(this, cx, cy + 220);
+    this.largeBtn = new LargeClickButton(this, cx, cy + 230, () => {
+      console.log("Large button clicked!");
+    });
+
 
     // === Bottom Navigation ===
     this.bottomNav = new BottomNavBar(this);

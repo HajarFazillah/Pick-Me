@@ -1,43 +1,32 @@
 export default class LargeClickButton {
-  constructor(scene, x, y) {
+  constructor(scene, x, y, onClick = null) {
     this.scene = scene;
 
-    // Normal & pressed colors
-    this.defaultColor = 0xdddddd;
-    this.pressedColor = 0xbbbbbb;
-
-    // Button shape
-    this.button = scene.add.rectangle(x, y, 350, 90, this.defaultColor)
+    // Add the button image
+    this.button = scene.add.image(x, y, "LargeClickButton")
       .setOrigin(0.5)
-      .setStrokeStyle(2, 0x000000)
-      .setInteractive({ useHandCursor: true });
+      .setInteractive({ useHandCursor: true })
+      .setScale(1.45);
+    // === Pointer Events ===
 
-    // Button text
-    this.text = scene.add.text(x, y, 'CLICK', {
-      fontSize: '40px',
-      color: '#000000',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
-
-    // === Add Pointer Events ===
-
-    // When pressed down
-    this.button.on('pointerdown', () => {
-      this.button.setFillStyle(this.pressedColor);
+    // Pressed down → make slightly smaller & darker
+    this.button.on("pointerdown", () => {
+      //this.button.setScale(1.40);       // shrink a little
+      this.button.setAlpha(0.8);        // dim slightly
     });
 
-    // When released (inside button)
-    this.button.on('pointerup', () => {
-      this.button.setFillStyle(this.defaultColor);
-
-      // TODO: Insert your click action here
-      // Example:
-      // console.log("Button clicked!");
+    // Released → restore & fire click
+    this.button.on("pointerup", () => {
+      //this.button.setScale(1);
+      this.button.setAlpha(1);
+      console.log("LargeClickButton clicked");
+      if (onClick) onClick();  // callback
     });
 
-    // If pointer leaves the button while still held
-    this.button.on('pointerout', () => {
-      this.button.setFillStyle(this.defaultColor);
+    // Pointer dragged out → cancel press effect
+    this.button.on("pointerout", () => {
+      //this.button.setScale(1);
+      this.button.setAlpha(1);
     });
   }
 }

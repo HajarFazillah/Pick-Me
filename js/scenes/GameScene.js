@@ -24,6 +24,7 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('Char_Snow', 'assets/Char_Snow.png');
     this.load.image('Char_Pen', 'assets/Char_Pen.png');
     this.load.image('Char_Happy', 'assets/Char_Happy.png');
+    // Category button assets
     this.load.image("cat1BtnOff", "assets/ButtonCat1_Off.png");
     this.load.image("cat1BtnOn", "assets/ButtonCat1_On.png");
     this.load.image("cat2BtnOff", "assets/ButtonCat2_Off.png");

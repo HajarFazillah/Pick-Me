@@ -81,8 +81,18 @@ export default class MailPopup {
             .setStrokeStyle(2, 0xbdc8cc);
         this.innerPopup.add(bg);
 
+        // Add white inner background (rounded)
+       let innerBg;
+     if (this.scene.add.roundRectangle) {
+        innerBg = this.scene.add.roundRectangle(0, -50, width - 40, height - 210, 24, 0xffffff)
+            .setStrokeStyle(1, 0xe0e0e0);
+     } else {
+        innerBg = this.scene.add.rectangle(0, -50, width - 40, height - 210, 0xffffff)
+            .setStrokeStyle(1, 0xe0e0e0);
+     }
+        this.innerPopup.add(innerBg);
         // Mail Details
-        this.innerPopup.add(this.scene.add.text(-width/2+40, -height/2+50, `보낸 사람: ${mail.sender}\n${mail.content}`, {
+        this.innerPopup.add(this.scene.add.text(-width/2+40, -height/2+60, `보낸 사람: ${mail.sender}\n${mail.content}`, {
             fontSize: 21,
             color: "#222"
         }));
@@ -116,10 +126,21 @@ export default class MailPopup {
     }
 
     showRewardReceived(reward) {
-        // Simple reward popup, show at center
+
+        const popupLayer = this.scene.add.container(0, 0);
+        // Block input to all layers behind (popup blocker)
+     const blocker = this.scene.add.rectangle(
+        this.scene.cameras.main.centerX,
+        this.scene.cameras.main.centerY,
+        this.scene.scale.width,
+        this.scene.scale.height,
+        0x000000, 0.4 
+      ).setOrigin(0.5).setInteractive();
+     popupLayer.add(blocker);
+
+         //Reward Popup
         const w = 340, h = 185;
         const popup = this.scene.add.container(this.scene.cameras.main.centerX, this.scene.cameras.main.centerY);
-
         const bg = this.scene.add.rectangle(0, 0, w, h, 0xdbdbdb).setOrigin(0.5);
         popup.add(bg);
 
@@ -128,15 +149,15 @@ export default class MailPopup {
         popup.add(coin);
         popup.add(this.scene.add.text(-120, 60, `보상을 받았습니다.`, { fontSize: 30, color: "#222" }));
 
-        // Confirm button (reuse yes_button asset or 'X' image)
+        // Confirm button 
         const yesBtn = this.scene.add.image(150, 78, 'yes_button')
             .setOrigin(0.5)
             .setDisplaySize(30, 30)
             .setInteractive({ useHandCursor: true });
-        yesBtn.on('pointerdown', () => popup.destroy());
-        popup.add(yesBtn);
-
-        // Optionally close mail detail popup as well
-        if (this.innerPopup) { this.innerPopup.destroy(); this.innerPopup = null; }
-    }
+        yesBtn.on('pointerdown', () => {
+         popupLayer.destroy();  // clean up everything (blocker + popup)
+     });
+     popup.add(yesBtn);
+     popupLayer.add(popup);
+     }
 }

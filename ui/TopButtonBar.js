@@ -1,6 +1,7 @@
 import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
 import QuestPopup from '/ui/QuestPopup.js';
 import MailPopup from '/ui/MailPopup.js';
+import SettingPopup from '/ui/SettingPopup.js';
 
 // TopButtonBar.js
 
@@ -16,6 +17,7 @@ export default class TopButtonBar {
         this.popup = null;
         this.questPopup = new QuestPopup(scene);
         this.mailPopup = new MailPopup(scene);
+        this.settingPopup = new SettingPopup(scene);
         this.createButtonBar();
     }
 
@@ -53,12 +55,13 @@ export default class TopButtonBar {
         };
         this.questPopup.show(questData);
          } else if (label === '메일') {
-                    // Call your mail popup!
                     const sampleMailList = [
                         { sender: "팀이름", title: "환영합니다!", content: "게임에 참여해 주셔서 감사합니다.", hasReward: true, reward: 9999, received: false },
                         { sender: "GM", title: "업데이트 소식", content: "새 이벤트가 시작됩니다.", hasReward: false, reward: 0, received: false }
                     ];
                     this.mailPopup.show(sampleMailList);
+         } else if (label === '설정') {
+                   this.settingPopup.show();
     } else {
         this.showSimplePopup(label + ' 팝업입니다');
     }

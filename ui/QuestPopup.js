@@ -205,22 +205,14 @@ this.timerEvent = this.scene.time.addEvent({
             }
         });
 
-        // --- X Button Bottom Left
-       const xBtnSize = 48; 
-const closeBtn = this.scene.add.text(
-    -bgWidth * scale / 2 + xBtnSize,  // X: left edge + offset
-    bgHeight * scale / 1.9 - xBtnSize,  // Y: bottom edge - offset
-    'X',
-    {
-      fontSize: '28px',
-      fontStyle: 'bold',
-      color: '#91131a',
-      fontFamily: 'Arial'
-    }
-).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    // --- X Button Bottom Left Using Image ---
+const xBtnSize = 38; 
+const closeBtn = this.scene.add.image(
+    -bgWidth  / 1.9 + xBtnSize,
+    bgHeight  / 1.9 - xBtnSize,
+    "exit_button"
+).setOrigin(0.5).setDisplaySize(xBtnSize, xBtnSize).setInteractive({ useHandCursor: true });
 
-closeBtn.on('pointerover', () => closeBtn.setColor('#fa5555'));
-closeBtn.on('pointerout', () => closeBtn.setColor('#91131a'));
 closeBtn.on('pointerdown', () => {
     this.popup.destroy();
     this.popup = null;

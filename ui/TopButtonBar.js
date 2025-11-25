@@ -2,6 +2,7 @@ import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.j
 import QuestPopup from '/ui/QuestPopup.js';
 import MailPopup from '/ui/MailPopup.js';
 import SettingPopup from '/ui/SettingPopup.js';
+import NoticePopup from '/ui/NoticePopup.js';
 
 // TopButtonBar.js
 
@@ -18,6 +19,7 @@ export default class TopButtonBar {
         this.questPopup = new QuestPopup(scene);
         this.mailPopup = new MailPopup(scene);
         this.settingPopup = new SettingPopup(scene);
+        this.noticePopup = new NoticePopup(scene);
         this.createButtonBar();
     }
 
@@ -62,6 +64,16 @@ export default class TopButtonBar {
                     this.mailPopup.show(sampleMailList);
          } else if (label === '설정') {
                    this.settingPopup.show();
+         } else if (label === '공지') {
+            // Example notice data
+             const noticeList = [
+             { 
+              title: "공지공지공지공지공지공지업데이트안내",
+              text: "공지공지공지공지공지공지업데이트안내\n공지공지공지공지공지공지업데이트안내\n공지공지공지공지공지공지업데이트안내"
+             },
+            { title: "새 이벤트 공지", text: "새로운 이벤트가 추가되었습니다!" }
+            ];
+             this.noticePopup.show(noticeList);
     } else {
         this.showSimplePopup(label + ' 팝업입니다');
     }

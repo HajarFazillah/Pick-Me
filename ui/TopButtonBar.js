@@ -59,7 +59,8 @@ export default class TopButtonBar {
          } else if (label === '메일') {
                     const sampleMailList = [
                         { sender: "팀이름", title: "환영합니다!", content: "게임에 참여해 주셔서 감사합니다.", hasReward: true, reward: 9999, received: false },
-                        { sender: "GM", title: "업데이트 소식", content: "새 이벤트가 시작됩니다.", hasReward: false, reward: 0, received: false }
+                        { sender: "GM", title: "업데이트 소식", content: "새 이벤트가 시작됩니다.", hasReward: false, reward: 0, received: false },
+                        { sender: "팀이름", title: "새 친구가 추가되었습니다.", content: "내용내용내용내용내용내용내용내용.", hasReward: false, reward: 0, received: false }
                     ];
                     this.mailPopup.show(sampleMailList);
          } else if (label === '설정') {

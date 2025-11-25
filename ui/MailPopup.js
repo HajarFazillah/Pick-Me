@@ -32,23 +32,25 @@ export default class MailPopup {
             const boxY = -height / 2 + 55 + idx * (boxHeight + 8);
 
             // Draw each mail item box
-            const mailBox = this.scene.add.rectangle(0, boxY, width - 40, boxHeight, 0xffffff)
-                .setOrigin(0.5)
-                .setStrokeStyle(0.5, 0xdddddd);
+            const mailBox = this.scene.add.rectangle(0, boxY, width - 50, boxHeight, 0xffffff)
+            .setOrigin(0.5)
+            .setStrokeStyle(2, 0xe0e0e0);
             this.popup.add(mailBox);
 
             // Icon (Envelope) – can preload or use a shape for demo
-            const icon = this.scene.add.image(-width / 2 + 65, boxY, 'mail_icon')
-                .setOrigin(0.5)
-                .setDisplaySize(66, 44);
-            this.popup.add(icon);
+           const iconBg = this.scene.add.circle(-width / 2 + 60, boxY, 30, 0xf0f0f0);
+           this.popup.add(iconBg);
+           const icon = this.scene.add.image(-width / 2 + 60, boxY, 'mail_icon')
+            .setOrigin(0.5)
+            .setDisplaySize(36, 24);
+           this.popup.add(icon);
 
             // Sender name and preview
-            this.popup.add(this.scene.add.text(-width / 2 + 120, boxY - 22, `보낸 사람: ${mail.sender}`, { fontSize: fontMd, color: "#222" }));
-            this.popup.add(this.scene.add.text(-width / 2 + 120, boxY + 8, mail.title, { fontSize: fontMd, color: "#222" }));
+            this.popup.add(this.scene.add.text(-width / 2 + 110, boxY - 18, mail.sender, { fontSize: fontMd, fontStyle: "bold", color: "#242424" }));
+            this.popup.add(this.scene.add.text(-width / 2 + 110, boxY + 12, mail.title, { fontSize: fontMd - 2, color: "#757575" }));
             
             // Duration at right
-            this.popup.add(this.scene.add.text(width / 2 - 150, boxY - 22, `보유 기간 n일`, { fontSize: fontMd - 2, color: "#222" }));
+           this.popup.add(this.scene.add.text(width / 2 - 60, boxY, `보유 기간 n일`, { fontSize: fontMd - 2, color: "#999" }).setOrigin(1, 0.5));
 
             // Make mail openable (popup inner)
             mailBox.setInteractive({ useHandCursor: true });

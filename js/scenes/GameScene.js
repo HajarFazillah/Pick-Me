@@ -30,6 +30,12 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("cat2BtnOff", "assets/ButtonCat2_Off.png");
     this.load.image("cat2BtnOn", "assets/ButtonCat2_On.png");
     this.load.image("cat3BtnOff", "assets/ButtonCat3_Off.png");
+    //Quest Button
+    this.load.image("quest_coin", "assets/quest_coin.png");
+    this.load.image("quest_claim", "assets/quest_claim.png");
+    this.load.image("quest_claimed", "assets/quest_claimed.png");
+    this.load.image("exit_button", "assets/exit_button.png");
+    this.load.image("yes_button", "assets/yes_button.png");
     // Other images can be add here too
   }
 

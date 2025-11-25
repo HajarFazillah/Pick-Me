@@ -138,12 +138,28 @@ this.timerEvent = this.scene.time.addEvent({
                 this.popup.add(pbFill);
 
                 // Reward button
-                let iconColor = 0xffffff;
-                if (quest.status === "완료") iconColor = 0xdadbdb;
-                if (quest.status === "수령") iconColor = 0x222222;
-                const btn = this.scene.add.rectangle(questBoxWidth/2 - 40 * scale, baseY + 5 * scale, iconSize, iconSize, iconColor).setStrokeStyle(2, 0xdbdbdb);
-                this.popup.add(btn);
-            } else {
+                let buttonImgKey;
+                let bgColor;
+                // Logic for selecting image and bg color
+                if (quest.status === "진행중") {
+                    buttonImgKey = "quest_coin";
+                    bgColor = 0xdadbdb; // Light gray
+                } else if (quest.status === "완료") {
+                   buttonImgKey = "quest_claim";
+                   bgColor = 0xdadbdb; // Light gray
+                } else if (quest.status === "수령") {
+                   buttonImgKey = "quest_claimed";
+                   bgColor = 0x222222; // Dark gray
+                }
+
+                 // Draw background first
+                const btnBg = this.scene.add.rectangle(questBoxWidth/2 - 40 * scale, baseY + 5, iconSize, iconSize, bgColor).setOrigin(0.5);
+                this.popup.add(btnBg);
+
+                // Draw image on top
+                const btnImg = this.scene.add.image(questBoxWidth/2 - 40 * scale, baseY + 5, buttonImgKey).setDisplaySize(iconSize * 0.8, iconSize * 0.8);
+                 this.popup.add(btnImg);
+            }    else {
                 // Regular quests
                 baseY = firstBoxStartY + weeklyBoxHeight / 4 + (idx - 1) * (questBoxHeight + gap) + questBoxHeight / 2;
                 const questBg = this.scene.add.rectangle(0, baseY, questBoxWidth, questBoxHeight, 0xffd55c).setOrigin(0.5);
@@ -165,11 +181,27 @@ this.timerEvent = this.scene.time.addEvent({
                 this.popup.add(pbFill);
 
                 // Reward button
-                let iconColor = 0xffffff;
-                if (quest.status === "완료") iconColor = 0xdadbdb;
-                if (quest.status === "수령") iconColor = 0x222222;
-                const btn = this.scene.add.rectangle(questBoxWidth/2 - 40 * scale, baseY + 2 * scale, iconSize, iconSize, iconColor).setStrokeStyle(2, 0xdbdbdb);
-                this.popup.add(btn);
+             let buttonImgKey;
+             let bgColor;
+             // Logic for selecting image and bg color
+             if (quest.status === "진행중") {
+                 buttonImgKey = "quest_coin";
+                 bgColor = 0xdadbdb; // Light gray
+           } else if (quest.status === "완료") {
+               buttonImgKey = "quest_claim";
+               bgColor = 0xdadbdb; // Light gray
+           } else if (quest.status === "수령") {
+               buttonImgKey = "quest_claimed";
+             bgColor = 0x222222; // Dark gray
+            }
+
+              // Draw background first
+              const btnBg = this.scene.add.rectangle(questBoxWidth/2 - 40 * scale, baseY + 2, iconSize, iconSize, bgColor).setOrigin(0.5);
+              this.popup.add(btnBg);
+
+             // Draw image on top
+             const btnImg = this.scene.add.image(questBoxWidth/2 - 40 * scale, baseY + 2, buttonImgKey).setDisplaySize(iconSize * 0.8, iconSize * 0.8);
+             this.popup.add(btnImg);
             }
         });
 

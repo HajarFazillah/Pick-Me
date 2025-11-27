@@ -11,10 +11,15 @@ export default class TopButtonBar {
     constructor(scene, startX, startY) {
         this.scene = scene;
         this.container = scene.add.container(startX, startY);
-        
-        this.buttonRadius = 25;
         this.buttonGap = 34;
+        this.buttonWidth = 60;
         this.buttonLabels = ['퀘스트', '메일', '설정', '공지'];
+          this.buttonImageKeys = {
+            '퀘스트': 'questBtn',   
+            '메일':   'mailBtn',     
+            '설정':   'settingBtn',  
+            '공지':   'noticeBtn'    
+        };
         this.popup = null;
         this.questPopup = new QuestPopup(scene);
         this.mailPopup = new MailPopup(scene);
@@ -26,26 +31,27 @@ export default class TopButtonBar {
     createButtonBar() {
         this.scene.cameras.main.setBackgroundColor('#ffffff');
 
-        this.buttonsGroup = this.scene.add.container(0, 48);
-        this.buttonLabels.forEach((label, i) => {
-            const x = i * (this.buttonRadius * 2 + this.buttonGap);
-            const btn = this.scene.add.circle(x, 0, this.buttonRadius, 0xffffff)
-                .setStrokeStyle(4, 0x8887f6)
-                .setInteractive({ useHandCursor: true });
-            const txt = this.scene.add.text(x, this.buttonRadius + 10, label, {
-                fontSize: '22px', color: '#222', fontFamily: 'Arial'
-            }).setOrigin(0.5, 0);
+        this.buttonsGroup = this.scene.add.container(0, 30);
+         this.buttonLabels.forEach((label, i) => {
+            const x = i * (this.buttonWidth + this.buttonGap);
+            const imgKey = this.buttonImageKeys[label];
 
-            btn.on('pointerover', () => btn.setFillStyle(0xf4f6ff));
-            btn.on('pointerout', () => btn.setFillStyle(0xffffff));
+            const btn = this.scene.add.image(x, 0, imgKey)
+                .setOrigin(0.5)
+                .setDisplaySize(this.buttonWidth, 30)   // adjust to match your png size
+                .setInteractive({ useHandCursor: true });
+
+            btn.on('pointerover', () => btn.setTint(0xdddddd));
+            btn.on('pointerout', () => btn.clearTint());
+
             btn.on('pointerdown', () => {
         if (label === '퀘스트') {
             // Example quest data, fill with your real data later!
         let questData = {
-            weekly: {
+            weekly: {   
                 title: '일일 퀘스트 모두 달성',
                 curValue: 4,
-                goalValue: 5,
+                goalValue: 5,                             
                 status: "진행중", // or "완료", "수령"
             },
             quests: [
@@ -80,7 +86,7 @@ export default class TopButtonBar {
     }
 });
 
-            this.buttonsGroup.add([btn, txt]);
+            this.buttonsGroup.add(btn);
         });
 
         const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
@@ -94,8 +100,8 @@ export default class TopButtonBar {
     }
 
     updateBarPosition() {
-        const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
-        (this.buttonLabels.length - 1) * this.buttonGap;
+        const totalButtonsWidth = this.buttonLabels.length * this.buttonWidth +
+            (this.buttonLabels.length - 1) * this.buttonGap;
         const centerX = this.scene.cameras.main.centerX;
         this.buttonsGroup.x = centerX - totalButtonsWidth / 2;  
     }   

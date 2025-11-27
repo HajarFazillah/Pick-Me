@@ -31,16 +31,19 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("cat2BtnOn", "assets/ButtonCat2_On.png");
     this.load.image("cat3BtnOff", "assets/ButtonCat3_Off.png");
     //Quest Button
+    this.load.image("quest_Btn", "assets/questBtn.png");
     this.load.image("quest_coin", "assets/quest_coin.png");
     this.load.image("quest_claim", "assets/quest_claim.png");
     this.load.image("quest_claimed", "assets/quest_claimed.png");
     this.load.image("exit_button", "assets/exit_button.png");
     this.load.image("yes_button", "assets/yes_button.png");
     //Mail Button
+    this.load.image("mailBtn", "assets/mailBtn.png");
     this.load.image("mail_icon", "assets/mail_icon.png");
     this.load.image("mail_rewardBtn", "assets/mail_rewardBtn.png");
     this.load.image("mail_rewardBtnX", "assets/mail_rewardBtnX.png");
     //Setting Button
+    this.load.image("settingBtn", "assets/settingBtn.png");
     this.load.image("sound0", "assets/sound0.png");
     this.load.image("sound1", "assets/sound1.png");
     this.load.image("sound2", "assets/sound2.png");
@@ -49,6 +52,8 @@ export default class GameScene extends Phaser.Scene {
     this.load.image("music1", "assets/music1.png");
     this.load.image("music2", "assets/music2.png");
     this.load.image("music3", "assets/music3.png");
+    //Notice Button
+    this.load.image("noticeBtn", "assets/noticeBtn.png");
     // Other images can be add here too
   }
 

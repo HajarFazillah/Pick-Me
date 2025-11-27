@@ -139,7 +139,14 @@ export default class Lever{
     handleRightLeverClick() {
         if (this.popup) return;
 
-        const characters = ['Char_Cake', 'Char_Snow', 'Char_Pen', 'Char_Happy'];
+        const characters = ['Char_Snow',  'char_angryStar', 'char_angryStar2', 'char_doughnut', 'char_egg',
+      'char_frustStar', 'char_ghost', 'char_happyStar', 'char_icecream',
+      'char_laughStar', 'char_mugChoco', 'char_pen', 'char_ruler',
+      'char_skeleton', 'char_starCandy', 'char_sushi', 'char_worryStar',
+      'char_blackCat', 'char_christmasOrnament', 'char_depressedStar',
+      'char_noMannersStar', 'char_pancake', 'char_sadStar',
+      'char_scaredStar', 'char_scarf', 'char_shockStar'];
+
         const capsuleColors = ['CapsuleOpen_Yellow', 'CapsuleOpen_Blue'];
         this.gachaResults = [];
         this.gachaCapsules = [];
@@ -205,7 +212,7 @@ export default class Lever{
                 capsuleImg.setInteractive({ useHandCursor: true });
                 capsuleImg.once('pointerdown', () => {
                     capsuleImg.setVisible(false);
-                    const charImg = this.scene.add.image(0, 0, charKey).setDisplaySize(80, 80);
+                    const charImg = this.scene.add.image(0, 0, charKey).setDisplaySize(180, 180);
                     this.popup.add(charImg);
                     charImg.setInteractive({ useHandCursor: true });
 

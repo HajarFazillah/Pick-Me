@@ -17,6 +17,15 @@ export default class Lever{
     this.pityCounter = 0;         // Counts pulls since last A or higher
     this.maxPity = 100;           // At 101st, guarantee A or higher
     this.onProgressUpdate = null; // Callback for updating progress UI
+     this.characters = [
+            'Char_Snow','char_angryStar', 'char_angryStar2', 'char_doughnut', 'char_egg',
+            'char_frustStar', 'char_ghost', 'char_happyStar', 'char_icecream',
+            'char_laughStar', 'char_mugChoco', 'char_pen', 'char_ruler',
+            'char_skeleton', 'char_starCandy', 'char_sushi', 'char_worryStar',
+            'char_blackCat', 'char_christmasOrnament', 'char_depressedStar',
+            'char_noMannersStar', 'char_pancake', 'char_sadStar',
+            'char_scaredStar', 'char_scarf', 'char_shockStar'
+        ];
    }
    
    setProgressBarUpdateCallback(callback) {
@@ -91,18 +100,20 @@ export default class Lever{
             const isPity = this.pityCounter >= this.maxPity;
             this.pityCounter = isPity ? 0 : Math.min(this.pityCounter + 1, this.maxPity);
             this.updateProgressBar();
-            this.showLeftLeverPopup("Gacha Result", "이름이름이름");
+             const randomChar = this.characters[Math.floor(Math.random() * this.characters.length)];
+            this.gachaResults = [randomChar];
+            this.showLeftLeverPopup("Gacha Result");   // will use stored character
             this.leverState = 3;
         }
     }
 
-    showLeftLeverPopup(imageName, labelText) {
+    showLeftLeverPopup(imageName) {
         this.createPopupWithOverlay();
 
         // Map image key
         const imgKey = imageName === "Lever Turn" ? "LeftLever" :
                        imageName === "Capsule Open" ? "CapsuleOpen" :
-                       imageName === "Gacha Result" ? "GachaResult" : imageName;
+                       imageName === "Gacha Result" ?  this.gachaResults[0] : imageName;
 
         // Optional background for result
         if (imageName === "Gacha Result") {
@@ -139,14 +150,7 @@ export default class Lever{
     handleRightLeverClick() {
         if (this.popup) return;
 
-        const characters = ['Char_Snow',  'char_angryStar', 'char_angryStar2', 'char_doughnut', 'char_egg',
-      'char_frustStar', 'char_ghost', 'char_happyStar', 'char_icecream',
-      'char_laughStar', 'char_mugChoco', 'char_pen', 'char_ruler',
-      'char_skeleton', 'char_starCandy', 'char_sushi', 'char_worryStar',
-      'char_blackCat', 'char_christmasOrnament', 'char_depressedStar',
-      'char_noMannersStar', 'char_pancake', 'char_sadStar',
-      'char_scaredStar', 'char_scarf', 'char_shockStar'];
-
+        const characters = this.characters;
         const capsuleColors = ['CapsuleOpen_Yellow', 'CapsuleOpen_Blue'];
         this.gachaResults = [];
         this.gachaCapsules = [];

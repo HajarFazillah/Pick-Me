@@ -20,16 +20,62 @@ export default class GameScene extends Phaser.Scene {
     this.load.image('CapsuleOpen_Yellow', 'assets/CapsuleOpen_Yellow.png');
     this.load.image('CapsuleOpen_Blue', 'assets/CapsuleOpen_Blue.png');
     this.load.image('GachaResult', 'assets/GachaResult.png');
-    this.load.image('Char_Cake', 'assets/Char_Cake.png');
     this.load.image('Char_Snow', 'assets/Char_Snow.png');
-    this.load.image('Char_Pen', 'assets/Char_Pen.png');
-    this.load.image('Char_Happy', 'assets/Char_Happy.png');
+   this.load.image('char_angryStar', 'assets/char_angryStar.png');
+    this.load.image('char_angryStar2', 'assets/char_angryStar2.png');
+    this.load.image('char_doughnut', 'assets/char_doughnut.png');
+    this.load.image('char_egg', 'assets/char_egg.png');
+    this.load.image('char_frustStar', 'assets/char_frustStar.png');
+    this.load.image('char_ghost', 'assets/char_ghost.png');
+    this.load.image('char_happyStar', 'assets/char_happyStar.png');
+    this.load.image('char_icecream', 'assets/char_icecream.png');
+    this.load.image('char_laughStar', 'assets/char_laughStar.png');
+    this.load.image('char_mugChoco', 'assets/char_mugChoco.png');
+    this.load.image('char_pen', 'assets/char_pen.png');
+    this.load.image('char_ruler', 'assets/char_ruler.png');
+    this.load.image('char_skeleton', 'assets/char_skeleton.png');
+    this.load.image('char_starCandy', 'assets/char_starCandy.png');
+    this.load.image('char_sushi', 'assets/char_sushi.png');
+    this.load.image('char_worryStar', 'assets/char_worryStar.png');
+    this.load.image('char_blackCat', 'assets/char_blackCat.png');
+    this.load.image('char_christmasOrnament', 'assets/char_christmasOrnament.png');
+    this.load.image('char_depressedStar', 'assets/char_depressedStar.png');
+    this.load.image('char_noMannersStar', 'assets/char_noMannersStar.png');
+    this.load.image('char_pancake', 'assets/char_pancake.png');
+    this.load.image('char_sadStar', 'assets/char_sadStar.png');
+    this.load.image('char_scaredStar', 'assets/char_scaredStar.png');
+    this.load.image('char_scarf', 'assets/char_scarf.png');
+    this.load.image('char_shockStar', 'assets/char_shockStar.png');
     // Category button assets
     this.load.image("cat1BtnOff", "assets/ButtonCat1_Off.png");
     this.load.image("cat1BtnOn", "assets/ButtonCat1_On.png");
     this.load.image("cat2BtnOff", "assets/ButtonCat2_Off.png");
     this.load.image("cat2BtnOn", "assets/ButtonCat2_On.png");
     this.load.image("cat3BtnOff", "assets/ButtonCat3_Off.png");
+    //Quest Button
+    this.load.image("questBtn", "assets/questBtn.png");
+    this.load.image("quest_coin", "assets/quest_coin.png");
+    this.load.image("quest_claim", "assets/quest_claim.png");
+    this.load.image("quest_claimed", "assets/quest_claimed.png");
+    this.load.image("exit_button", "assets/exit_button.png");
+    this.load.image("yes_button", "assets/yes_button.png");
+    //Mail Button
+    this.load.image("mailBtn", "assets/mailBtn.png");
+    this.load.image("mail_icon", "assets/mail_icon.png");
+    this.load.image("mail_rewardBtn", "assets/mail_rewardBtn.png");
+    this.load.image("mail_rewardBtnX", "assets/mail_rewardBtnX.png");
+    //Setting Button
+    this.load.image("settingBtn", "assets/settingBtn.png");
+    this.load.image("sound0", "assets/sound0.png");
+    this.load.image("sound1", "assets/sound1.png");
+    this.load.image("sound2", "assets/sound2.png");
+    this.load.image("sound3", "assets/sound3.png");
+    this.load.image("music0", "assets/music0.png");
+    this.load.image("music1", "assets/music1.png");
+    this.load.image("music2", "assets/music2.png");
+    this.load.image("music3", "assets/music3.png");
+    //Notice Button
+    this.load.image("noticeBtn", "assets/noticeBtn.png");
     // Other images can be add here too
   }
 

@@ -1,5 +1,8 @@
 import * as Phaser from 'https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.esm.js';
 import QuestPopup from '/ui/QuestPopup.js';
+import MailPopup from '/ui/MailPopup.js';
+import SettingPopup from '/ui/SettingPopup.js';
+import NoticePopup from '/ui/NoticePopup.js';
 
 // TopButtonBar.js
 
@@ -8,38 +11,47 @@ export default class TopButtonBar {
     constructor(scene, startX, startY) {
         this.scene = scene;
         this.container = scene.add.container(startX, startY);
-        
-        this.buttonRadius = 25;
         this.buttonGap = 34;
+        this.buttonWidth = 60;
         this.buttonLabels = ['퀘스트', '메일', '설정', '공지'];
+          this.buttonImageKeys = {
+            '퀘스트': 'questBtn',   
+            '메일':   'mailBtn',     
+            '설정':   'settingBtn',  
+            '공지':   'noticeBtn'    
+        };
         this.popup = null;
         this.questPopup = new QuestPopup(scene);
+        this.mailPopup = new MailPopup(scene);
+        this.settingPopup = new SettingPopup(scene);
+        this.noticePopup = new NoticePopup(scene);
         this.createButtonBar();
     }
 
     createButtonBar() {
         this.scene.cameras.main.setBackgroundColor('#ffffff');
 
-        this.buttonsGroup = this.scene.add.container(0, 48);
-        this.buttonLabels.forEach((label, i) => {
-            const x = i * (this.buttonRadius * 2 + this.buttonGap);
-            const btn = this.scene.add.circle(x, 0, this.buttonRadius, 0xffffff)
-                .setStrokeStyle(4, 0x8887f6)
-                .setInteractive({ useHandCursor: true });
-            const txt = this.scene.add.text(x, this.buttonRadius + 10, label, {
-                fontSize: '22px', color: '#222', fontFamily: 'Arial'
-            }).setOrigin(0.5, 0);
+        this.buttonsGroup = this.scene.add.container(0, 30);
+         this.buttonLabels.forEach((label, i) => {
+            const x = i * (this.buttonWidth + this.buttonGap);
+            const imgKey = this.buttonImageKeys[label];
 
-            btn.on('pointerover', () => btn.setFillStyle(0xf4f6ff));
-            btn.on('pointerout', () => btn.setFillStyle(0xffffff));
+            const btn = this.scene.add.image(x, 0, imgKey)
+                .setOrigin(0.5)
+                .setDisplaySize(this.buttonWidth, 30)   // adjust to match your png size
+                .setInteractive({ useHandCursor: true });
+
+            btn.on('pointerover', () => btn.setTint(0xdddddd));
+            btn.on('pointerout', () => btn.clearTint());
+
             btn.on('pointerdown', () => {
         if (label === '퀘스트') {
             // Example quest data, fill with your real data later!
         let questData = {
-            weekly: {
+            weekly: {   
                 title: '일일 퀘스트 모두 달성',
                 curValue: 4,
-                goalValue: 5,
+                goalValue: 5,                             
                 status: "진행중", // or "완료", "수령"
             },
             quests: [
@@ -50,12 +62,31 @@ export default class TopButtonBar {
             ]
         };
         this.questPopup.show(questData);
+         } else if (label === '메일') {
+                    const sampleMailList = [
+                        { sender: "팀이름", title: "환영합니다!", content: "게임에 참여해 주셔서 감사합니다.", hasReward: true, reward: 9999, received: false },
+                        { sender: "GM", title: "업데이트 소식", content: "새 이벤트가 시작됩니다.", hasReward: false, reward: 0, received: false },
+                        { sender: "팀이름", title: "새 친구가 추가되었습니다.", content: "내용내용내용내용내용내용내용내용.", hasReward: false, reward: 0, received: false }
+                    ];
+                    this.mailPopup.show(sampleMailList);
+         } else if (label === '설정') {
+                   this.settingPopup.show();
+         } else if (label === '공지') {
+            // Example notice data
+             const noticeList = [
+             { 
+              title: "공지공지공지공지공지공지업데이트안내",
+              text: "공지공지공지공지공지공지업데이트안내\n공지공지공지공지공지공지업데이트안내\n공지공지공지공지공지공지업데이트안내"
+             },
+            { title: "새 이벤트 공지", text: "새로운 이벤트가 추가되었습니다!" }
+            ];
+             this.noticePopup.show(noticeList);
     } else {
         this.showSimplePopup(label + ' 팝업입니다');
     }
 });
 
-            this.buttonsGroup.add([btn, txt]);
+            this.buttonsGroup.add(btn);
         });
 
         const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
@@ -69,8 +100,8 @@ export default class TopButtonBar {
     }
 
     updateBarPosition() {
-        const totalButtonsWidth = this.buttonLabels.length * this.buttonRadius * 2 +
-        (this.buttonLabels.length - 1) * this.buttonGap;
+        const totalButtonsWidth = this.buttonLabels.length * this.buttonWidth +
+            (this.buttonLabels.length - 1) * this.buttonGap;
         const centerX = this.scene.cameras.main.centerX;
         this.buttonsGroup.x = centerX - totalButtonsWidth / 2;  
     }   
